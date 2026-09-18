@@ -1,0 +1,64 @@
+/* Design tokens — см. DESIGN.md */
+:root {
+  /* Тёмный кинозал */
+  --night: #1B0100;
+  --night-deep: #0B0302;
+  --wine: #360305;
+  --wine-2: #4B120D;
+
+  /* Экран */
+  --screen: #F0EEEC;
+  --screen-2: #F8F8F2;
+
+  /* Текст */
+  --ink: #1A0503;
+  --maroon: #3E0204;
+  --rose-mute: #A39491;
+  /* Текстовый вариант rose-mute: на --screen даёт 4.85:1, сам --rose-mute — только 2.52:1 */
+  --rose-ink: #75645F;
+  --rose-soft: #C48F86;
+  --paper: #F7F2EC;
+
+  /* Акценты */
+  --red: #EB0F03;
+  --red-brand: #CA2615;
+  --ember: #FB5D06;
+  --ember-2: #F44613;
+
+  /* Градиенты и линии */
+  --glow-hero: radial-gradient(120% 90% at 70% 20%, #FB5D06 0%, #CA2615 28%, #5B000C 60%, #1B0100 100%);
+  --glow-edge: radial-gradient(80% 60% at 50% 110%, rgba(202, 38, 21, .45), transparent 70%);
+  --line-dark: rgba(247, 242, 236, .14);
+  --line-light: rgba(62, 2, 4, .14);
+
+  /* Шрифты */
+  --font-display: 'Inter Tight', sans-serif;
+  --font-body: 'Onest', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Шкала (fluid), DESIGN.md §3 */
+  --fs-mega: clamp(3.5rem, 13vw, 12rem);
+  --fs-h1: clamp(2.6rem, 7vw, 6.5rem);
+  --fs-h2: clamp(2rem, 5vw, 4.25rem);
+  --fs-h3: clamp(1.25rem, 2vw, 1.75rem);
+  --fs-body: clamp(1rem, 1.1vw, 1.125rem);
+  --fs-meta: 0.75rem;
+
+  /* Сетка и ритм, DESIGN.md §4 */
+  --container-max: 1440px;
+  --gutter: clamp(16px, 4vw, 56px);
+  --section-gap: clamp(96px, 14vh, 180px);
+  /* Отступ светлых «экранов» от краёв окна (реф. 1) */
+  --frame: clamp(12px, 2vw, 24px);
+
+  /* Радиусы, DESIGN.md §4 */
+  --radius-screen: 36px;
+  --radius-card: 22px;
+  --radius-photo: 18px;
+  --radius-pill: 999px;
+
+  /* Движение, DESIGN.md §6 */
+  --ease-default: cubic-bezier(.2, .7, .1, 1);
+  --dur-micro: 200ms;
+  --dur-in: 900ms;
+}

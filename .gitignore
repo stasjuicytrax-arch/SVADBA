@@ -1,0 +1,7 @@
+node_modules
+dist
+.DS_Store
+*.local
+
+# служебный кэш impeccable (локальное состояние сессии)
+.impeccable/hook.cache.json

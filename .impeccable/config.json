@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "hero-eyebrow-chip",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-18T19:16:03.359Z",
+        "reason": "DESIGN.md §7 lists 'Eyebrow-строка' as a named component of this design system; docs/TZ.md block 01 requires 'мелкая mono-подпись «СВАДЕБНОЕ АГЕНТСТВО»' above the hero wordmark"
+      },
+      {
+        "rule": "all-caps-body",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-18T19:16:03.675Z",
+        "reason": "Caps here are display typography per DESIGN.md §3 (Inter Tight UPPERCASE) on three spec'd elements: marquee (TZ block 02 'Inter Tight капсом'), section__quote (TZ block 06, authored in caps), footer CTA slogan (TZ block 15, --fs-h2 headline). Paragraph copy in .section__text/.section__lead stays sentence case."
+      }
+    ]
+  }
+}
