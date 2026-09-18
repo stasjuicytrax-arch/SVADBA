@@ -39,7 +39,6 @@
   height: 1px;
   width: 0;
   background: var(--red);
-  box-shadow: 0 0 10px 1px rgba(235, 15, 3, .5);
 }
 
 .timecode__value {
@@ -183,9 +182,10 @@
   transition: background var(--dur-micro) var(--ease-default);
 }
 
+/* Ховер уходит в тёмный, а не в --red: так контраст растёт (5.86:1), а не падает до 4.1:1 */
 .nav__cta:hover,
 .nav__cta:focus-visible {
-  background: var(--red);
+  background: #B71F11;
 }
 
 .nav__burger {
@@ -403,10 +403,11 @@
   will-change: transform;
 }
 
+/* 700 + от 20px: «//» цветом --night держит 3.62:1, а это порог крупного текста (3:1) */
 .marquee__item {
   font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.1rem, 2.6vw, 2.1rem);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.6vw, 2.1rem);
   text-transform: uppercase;
   letter-spacing: -0.03em;
   color: var(--paper);

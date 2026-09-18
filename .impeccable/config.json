@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-09-18T19:16:03.675Z",
         "reason": "Caps here are display typography per DESIGN.md §3 (Inter Tight UPPERCASE) on three spec'd elements: marquee (TZ block 02 'Inter Tight капсом'), section__quote (TZ block 06, authored in caps), footer CTA slogan (TZ block 15, --fs-h2 headline). Paragraph copy in .section__text/.section__lead stays sentence case."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-18T19:33:07.613Z",
+        "reason": "Две находки проверены: (1) .marquee — бесконечный тикер, текст обязан уходить за оба края без просвета (docs/TZ.md блок 02); (2) остальные секции держат контент в .container с padding-inline: var(--gutter) = clamp(16px,4vw,56px), анализатор не разворачивает var->clamp и читает как 0"
       }
     ]
   }
