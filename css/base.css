@@ -87,6 +87,46 @@ h3 { font-size: var(--fs-h3); }
   margin-bottom: var(--frame);
 }
 
+/* Панель со срезанными углами и вырезами сверху/снизу (реф. 3), DESIGN.md §7 */
+.panel-cut {
+  --cut: clamp(28px, 2.6vw, 40px);
+  --notch-w: clamp(120px, 22%, 320px);
+  --notch-d: clamp(10px, 1.1vw, 16px);
+  border-radius: 0;
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(50% - var(--notch-w) / 2) 0,
+    calc(50% - var(--notch-w) / 2 + var(--notch-d)) var(--notch-d),
+    calc(50% + var(--notch-w) / 2 - var(--notch-d)) var(--notch-d),
+    calc(50% + var(--notch-w) / 2) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    calc(50% + var(--notch-w) / 2) 100%,
+    calc(50% + var(--notch-w) / 2 - var(--notch-d)) calc(100% - var(--notch-d)),
+    calc(50% - var(--notch-w) / 2 + var(--notch-d)) calc(100% - var(--notch-d)),
+    calc(50% - var(--notch-w) / 2) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+/* Только срезанные углы, без вырезов — где по центру сверху/снизу лежит важное (hero) */
+.panel-cut--plain {
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
 .eyebrow {
   display: block;
   font-family: var(--font-mono);
@@ -133,6 +173,108 @@ h3 { font-size: var(--fs-h3); }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -0.02em;
+}
+
+/* Главная кнопка «Написать нам»: заливка наливается снизу, стрелка ↗ улетает
+   и возвращается новой. Фон --red-brand (4.97:1), заливка #B71F11 (5.86:1) */
+.cta {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--radius-pill);
+  background: var(--red-brand);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 500;
+  white-space: nowrap;
+  transition: transform 220ms var(--ease-default);
+}
+
+.cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: #B71F11;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 220ms var(--ease-default);
+}
+
+/* Зона нажатия не меньше 44px при визуальной высоте 40px */
+.cta::after {
+  content: "";
+  position: absolute;
+  inset: -2px 0;
+}
+
+.cta:hover,
+.cta:focus-visible {
+  transform: translateY(-1px);
+}
+
+.cta:hover::before,
+.cta:focus-visible::before {
+  transform: scaleY(1);
+}
+
+.cta:active {
+  transform: scale(.97);
+}
+
+.cta__arrow {
+  position: relative;
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.cta__arrow svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 220ms var(--ease-default);
+}
+
+.cta__arrow svg:last-child {
+  transform: translate(-100%, 100%);
+}
+
+.cta:hover .cta__arrow svg:first-child,
+.cta:focus-visible .cta__arrow svg:first-child {
+  transform: translate(100%, -100%);
+}
+
+.cta:hover .cta__arrow svg:last-child,
+.cta:focus-visible .cta__arrow svg:last-child {
+  transform: translate(0, 0);
+}
+
+.cta--sm {
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.cta--lg {
+  height: 60px;
+  padding: 0 30px;
+  font-size: 18px;
+}
+
+.cta--lg .cta__arrow {
+  width: 14px;
+  height: 14px;
 }
 
 .button--ghost {

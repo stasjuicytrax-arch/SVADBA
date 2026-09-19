@@ -6,7 +6,8 @@
   var hasGsap = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
 
   /* ---------------------------------------------------------------- Интро */
-  var screen = document.getElementById('heroScreen');
+  /* Раскрывается внутренняя сцена: у внешней рамки свой clip-path со срезом углов */
+  var screen = document.getElementById('heroStage');
   var introDone = false;
 
   function endIntro() {
@@ -100,22 +101,9 @@
   }
 
   /* --------------------------------------------------- Бесконечные ленты */
-  var scrollDir = -1;
-  var scrollVel = 0;
-  var prevY = window.scrollY;
+  window.addEventListener('scroll', queueTimecode, { passive: true });
 
-  window.addEventListener('scroll', function () {
-    var y = window.scrollY;
-    var d = y - prevY;
-    if (d !== 0) scrollDir = d > 0 ? -1 : 1;
-    scrollVel = Math.min(Math.abs(d), 90);
-    prevY = y;
-    queueTimecode();
-  }, { passive: true });
-
-  /* followScroll: лента реагирует на скорость и направление прокрутки (ТЗ блок 02).
-     Без него лента едет ровно сама по себе. */
-  function infiniteRow(row, baseDir, baseSpeed, followScroll) {
+  function infiniteRow(row, dir, speed) {
     var originals = Array.prototype.slice.call(row.children);
     if (!originals.length) return;
 
@@ -149,6 +137,10 @@
 
     measure();
 
+    /* Пока шрифты не загрузились, ширина фраз другая — пересчёт после загрузки,
+       иначе на стыке цикла был бы рывок */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
     /* Только изменение ширины: на мобиле адресная строка шлёт resize по высоте */
     var lastWidth = window.innerWidth;
     var resizeTimer = null;
@@ -167,9 +159,6 @@
     function tick() {
       rafId = null;
       if (!visible) return;
-
-      var dir = followScroll ? baseDir * scrollDir * -1 : baseDir;
-      var speed = followScroll ? baseSpeed + scrollVel * 0.05 : baseSpeed;
 
       x += dir * speed;
       if (unit > 0) {
@@ -202,24 +191,12 @@
   }
 
   if (!reduced) {
-    document.querySelectorAll('.marquee__track').forEach(function (track) {
-      var dir = parseFloat(track.getAttribute('data-marquee-dir')) || -1;
-      infiniteRow(track, dir, 0.9, true);
+    var track = document.querySelector('.marquee__track');
+    if (track) infiniteRow(track, -1, 0.5);
+
+    document.querySelectorAll('.strip__row').forEach(function (row) {
+      infiniteRow(row, parseFloat(row.getAttribute('data-strip-dir')) || -1, 0.35);
     });
-
-    var strip = document.getElementById('stripRow');
-    if (strip) infiniteRow(strip, -1, 0.35, false);
-
-    /* Затухание скорости лент — только пока она есть */
-    (function decay() {
-      if (scrollVel > 0.01) {
-        scrollVel *= 0.92;
-        requestAnimationFrame(decay);
-      } else {
-        scrollVel = 0;
-        setTimeout(decay, 200);
-      }
-    })();
   }
 
   window.addEventListener('resize', function () {
@@ -229,7 +206,7 @@
 
   /* ------------------------------------------------ Появление блока 04 */
   if (!reduced && hasGsap) {
-    gsap.from('.wordmark__kicker', {
+    gsap.from('.wordmark__eyebrow', {
       scrollTrigger: { trigger: '.wordmark', start: 'top 78%' },
       y: 20, opacity: 0, duration: .8, ease: 'power3.out'
     });

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Блоки 00–04 свёрстаны. Блоки 05–15 — низкий каркас, вёрстка на след. этапах.
+   Блоки 00–04 и футер свёрстаны. Блоки 05–14 — низкий каркас, вёрстка на след. этапах.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -174,34 +174,6 @@
   border-color: rgba(255, 255, 255, .35);
 }
 
-/* --red-brand, а не --red: на нём --paper даёт 4.97:1 при кегле 14px */
-.nav__cta {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  padding: 0 18px;
-  border-radius: var(--radius-pill);
-  background: var(--red-brand);
-  color: var(--paper);
-  font-family: var(--font-display);
-  font-weight: 500;
-  font-size: 14px;
-  white-space: nowrap;
-  transition: background var(--dur-micro) var(--ease-default);
-}
-
-.nav__cta::before {
-  content: "";
-  position: absolute;
-  inset: -2px 0;
-}
-
-.nav__cta:hover,
-.nav__cta:focus-visible {
-  background: #B71F11;
-}
-
 .nav__burger {
   display: none;
   width: 44px;
@@ -255,7 +227,6 @@
 .curtain__links {
   margin-top: 2.5rem;
   display: grid;
-  gap: 0;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   text-transform: uppercase;
@@ -290,12 +261,17 @@
   padding-top: calc(26px + var(--frame));
 }
 
+/* Внешняя рамка держит срез углов, интро раскрывает внутреннюю сцену */
 .hero__screen {
   position: relative;
   height: 100%;
-  border-radius: var(--radius-screen);
   overflow: hidden;
   background: var(--night);
+}
+
+.hero__stage {
+  position: absolute;
+  inset: 0;
 }
 
 .hero__bg {
@@ -330,7 +306,7 @@
   text-align: center;
 }
 
-/* Лозунг внутри h1 — для скринридеров и поиска; визуально на экране его несут ленты */
+/* Лозунг внутри h1 — для скринридеров и поиска; визуально его несёт лента */
 .hero__slogan {
   position: absolute;
   width: 1px;
@@ -363,25 +339,41 @@
   bottom: 32px;
   z-index: 2;
   display: flex;
-  flex-wrap: wrap;
+  align-items: stretch;
   gap: 12px;
-  max-width: min(520px, calc(100% - 64px));
+  max-width: calc(100% - 64px);
 }
 
 /* Тёмное стекло: белое поверх ярко-красного занавеса съедало бы белый текст */
 .hero__card {
-  flex: 1 1 200px;
-  max-width: 250px;
-  margin: 0;
-  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 18px 22px;
   border-radius: var(--radius-card);
   background: rgba(27, 1, 0, .5);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, .2);
+}
+
+.hero__card-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--rose-soft);
+}
+
+.hero__card p {
+  margin: 0;
+  max-width: 24ch;
+  font-size: 14px;
+  line-height: 1.35;
+  text-wrap: balance;
   color: var(--paper);
-  font-size: .9375rem;
-  line-height: 1.4;
 }
 
 .hero__scroll {
@@ -414,78 +406,53 @@
 }
 
 /* --------------------------------------------------------------------------
-   02. Две ленты крест-накрест
+   02. Бегущая строка — одна, горизонтальная
    -------------------------------------------------------------------------- */
-.marquees {
-  position: relative;
-  margin-top: 24px;
-  padding-block: 40px;
-  /* --glow-edge горит у нижнего края (50% 110%) и обрывался линией на границе секции;
-     здесь центр свечения между лентами, к краям оно гаснет в --night */
-  background-image: radial-gradient(60% 55% at 50% 55%, rgba(202, 38, 21, .32), transparent 72%);
-  overflow: hidden;
-}
-
 .marquee {
-  width: 114%;
-  margin-inline: -7%;
-  padding-block: clamp(12px, 1.6vw, 20px);
-  overflow: hidden;
-}
-
-.marquee--red {
+  margin-top: 40px;
+  padding-block: 12px;
   background: var(--red-brand);
-  transform: rotate(2deg);
-}
-
-/* При ±2° ленты сходятся на 0.07px на пиксель ширины: с отрицательным отступом
-   верхняя срезала буквы нижней на пол-экрана. Разнос центров ~146px сводит их
-   клином к правому краю, а пересечение уходит за экран */
-.marquee--wine {
-  background: var(--wine);
-  transform: rotate(-2deg);
-  margin-top: clamp(12px, 3.75vw, 54px);
+  overflow: hidden;
 }
 
 .marquee__track {
   display: flex;
-  gap: clamp(1.5rem, 3vw, 3rem);
+  gap: 2rem;
   width: max-content;
   white-space: nowrap;
   will-change: transform;
 }
 
-/* 700 и от 20px — «//» держит 3.62:1, а это порог крупного текста (3:1) */
 .marquee__item {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.25rem, 2.6vw, 2.1rem);
+  font-size: clamp(.95rem, 1.3vw, 1.05rem);
   text-transform: uppercase;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.01em;
+  color: var(--paper);
 }
 
-.marquee--red .marquee__item { color: var(--paper); }
-.marquee--red .marquee__item i { color: var(--night); }
-
-.marquee--wine .marquee__item { color: var(--rose-soft); }
-/* --paper, а не --red-brand: на --wine это 16:1 против 3.24:1 */
-.marquee--wine .marquee__item i { color: var(--paper); }
-
-.marquee__item i { font-style: normal; }
+/* «//» крупнее текста: от 19px при 700 это крупный текст с порогом 3:1, --night даёт 3.62:1 */
+.marquee__item i {
+  font-style: normal;
+  font-size: 1.25em;
+  color: var(--night);
+}
 
 /* --------------------------------------------------------------------------
-   03. Фото-лента — одна строка, кадры одной пропорции
+   03. Фото-лента — две строки навстречу, кадры одной пропорции
    -------------------------------------------------------------------------- */
 .strip {
-  padding-block: clamp(48px, 7vh, 80px);
+  display: grid;
+  gap: 16px;
+  padding-block: clamp(40px, 6vh, 72px);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
 }
 
 .strip__row {
   display: flex;
-  align-items: flex-start;
   gap: 16px;
   width: max-content;
   will-change: transform;
@@ -493,7 +460,7 @@
 
 .strip__frame {
   flex-shrink: 0;
-  width: clamp(180px, 22vw, 280px);
+  width: clamp(150px, 18vw, 240px);
   aspect-ratio: 4 / 5;
   margin: 0;
   border-radius: 20px;
@@ -507,26 +474,37 @@
 }
 
 /* --------------------------------------------------------------------------
-   04. Свадебное агентство «В титрах»
+   04. Свадебное агентство «В титрах» — панель со срезанными углами (реф. 3)
    -------------------------------------------------------------------------- */
 .wordmark {
   padding-block: 120px;
-  overflow: hidden;
 }
 
-/* --rose-ink вместо --rose-mute: на светлом «экране» 4.85:1 против 2.52:1 */
-.wordmark__kicker {
-  margin: 0;
-  text-align: center;
+/* Строка-подпись из трёх фраз через линии; --rose-ink на светлом — 4.85:1 */
+.wordmark__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 24px);
+  margin: 0 0 clamp(28px, 4vw, 48px);
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
-  letter-spacing: .2em;
+  letter-spacing: .16em;
   color: var(--rose-ink);
 }
 
+.wordmark__eyebrow span {
+  white-space: nowrap;
+}
+
+.wordmark__eyebrow i {
+  flex: 1;
+  height: 1px;
+  background: rgba(62, 2, 4, .22);
+}
+
 .wordmark__big {
-  margin: clamp(16px, 2.5vh, 28px) 0 0;
+  margin: 0;
   text-align: center;
   font-size: clamp(2.2rem, 14vw, 13rem);
   line-height: .86;
@@ -535,7 +513,6 @@
 }
 
 .wordmark__stage {
-  position: relative;
   width: min(720px, 100%);
   margin: 48px auto 0;
 }
@@ -549,31 +526,18 @@
   box-shadow: 0 30px 50px -28px rgba(26, 5, 3, .55);
 }
 
-.wordmark__heart {
-  position: absolute;
-  right: -18px;
-  bottom: -14px;
-  width: 64px;
-  height: auto;
-  animation: float 7s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0) rotate(-4deg); }
-  50% { transform: translateY(-12px) rotate(3deg); }
-}
-
 .wordmark__lead {
-  margin: 32px auto 0;
+  margin: 40px auto 0;
   max-width: 34ch;
   text-align: center;
   font-size: clamp(1.25rem, 1.8vw, 1.5rem);
   line-height: 1.35;
+  text-wrap: balance;
   color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
-   Блоки 05–15 — каркас
+   Блоки 05–14 — каркас
    -------------------------------------------------------------------------- */
 .section--behind {
   background: var(--night);
@@ -632,54 +596,197 @@
   gap: 1rem;
 }
 
-/* Футер */
+/* --------------------------------------------------------------------------
+   15. Футер — контакты слева, «финальные титры» справа
+   -------------------------------------------------------------------------- */
+/* Переход из --night в --night-deep градиентом: плоская смена давала линию-стык */
 .site-footer {
-  background: var(--night-deep);
-  padding-block: 80px;
+  background: linear-gradient(180deg, var(--night) 0, var(--night-deep) 180px);
+  padding-top: 96px;
+  overflow: hidden;
 }
 
-.footer__cta {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: var(--fs-h2);
-  max-width: 20ch;
-  margin-bottom: 2rem;
+.footer__grid {
+  display: grid;
+  gap: 56px;
 }
+
+.footer__contacts {
+  display: grid;
+  gap: 20px;
+}
+
+.footer__contacts li {
+  display: grid;
+  gap: 4px;
+}
+
+.footer__label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--rose-soft);
+}
+
+.footer__contacts a {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.25rem, 2.6vw, 2.25rem);
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--paper);
+  overflow-wrap: anywhere;
+}
+
+.footer__contacts a:hover { color: var(--rose-soft); }
 
 .footer__nav ul {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0 24px;
+  margin-top: 40px;
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  letter-spacing: .08em;
+  font-size: 12px;
+  letter-spacing: .12em;
 }
 
-.footer__contacts {
+.footer__nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--paper);
+}
+
+.footer__nav a:hover { color: var(--rose-soft); }
+
+.footer__side {
+  display: grid;
+  gap: 28px;
+  justify-items: start;
+}
+
+/* Финальные титры: строки медленно ползут вверх, на ховер — пауза */
+.credits {
+  width: 100%;
+  height: 216px;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 78%, transparent 100%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 22%, #000 78%, transparent 100%);
+}
+
+.credits__roll {
+  animation: credits-roll 26s linear infinite;
+}
+
+.credits:hover .credits__roll {
+  animation-play-state: paused;
+}
+
+/* Нижний отступ списка равен шагу строк: сдвиг на -50% совпадает со стыком копий */
+.credits__list {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding-bottom: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--rose-soft);
+}
+
+.credits__row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.credits__row dt {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.credits__row dt::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px dotted rgba(196, 143, 134, .45);
+}
+
+.credits__row dd {
+  margin: 0;
+  text-align: right;
+  color: var(--paper);
+}
+
+@keyframes credits-roll {
+  to { transform: translateY(-50%); }
+}
+
+.footer__social {
+  display: flex;
+  gap: 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.footer__social a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--rose-soft);
+}
+
+.footer__social a:hover { color: var(--paper); }
+
+.footer__bottom {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.footer__legal {
-  margin-top: 1.5rem;
-  max-width: 60ch;
-  font-size: var(--fs-meta);
+  justify-content: space-between;
+  gap: 12px 32px;
+  margin-top: 64px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line-dark);
+  font-size: 12px;
   color: var(--rose-soft);
 }
 
-.footer__credits {
-  margin-top: 2rem;
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  color: var(--rose-soft);
-}
-
+.footer__legal,
 .footer__copy {
-  margin-top: 1.5rem;
-  font-size: var(--fs-meta);
+  margin: 0;
+  max-width: 60ch;
+}
+
+.footer__copy a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Гигантский логотип на всю ширину, обрезан по середине нижней строки */
+.footer__logo {
+  position: relative;
+  margin: 48px var(--frame) 0;
+  aspect-ratio: 1000 / 265;
+  overflow: hidden;
+}
+
+.footer__logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Тон логотипа: darken берёт более тёмный цвет — белые буквы становятся ровно --wine-2,
+   а тёмный фон под слоем не меняется (фильтры sepia/hue-rotate давали оливковый) */
+.footer__logo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--wine-2);
+  mix-blend-mode: darken;
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
@@ -703,22 +810,32 @@
 
   .hero__cards {
     right: 32px;
-    max-width: none;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .hero__scroll { display: none; }
 
   .wordmark { padding-block: 80px; }
 
-  .wordmark__heart {
-    right: -8px;
-    bottom: -10px;
-    width: 52px;
+  .wordmark__eyebrow {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px 16px;
+    font-size: 11px;
   }
+
+  .wordmark__eyebrow i { display: none; }
 }
 
 @media (min-width: 900px) {
   .curtain { display: none; }
+
+  .footer__grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(48px, 6vw, 120px);
+    align-items: start;
+  }
 }
 
 /* Интро-«шторка»: пока идёт, страница не скроллится */
@@ -727,5 +844,13 @@ body.is-intro { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   body.is-intro { overflow: visible; }
   .hero__scroll line { animation: none; }
-  .wordmark__heart { animation: none; }
+
+  .credits {
+    height: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .credits__roll { animation: none; }
+  .credits__list[aria-hidden="true"] { display: none; }
 }
