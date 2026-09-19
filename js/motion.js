@@ -101,9 +101,19 @@
   }
 
   /* --------------------------------------------------- Бесконечные ленты */
-  window.addEventListener('scroll', queueTimecode, { passive: true });
+  /* Скорость прокрутки — для лёгкой реакции бегущей строки */
+  var scrollVel = 0;
+  var prevY = window.scrollY;
 
-  function infiniteRow(row, dir, speed) {
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY;
+    scrollVel = Math.min(Math.abs(y - prevY), 80);
+    prevY = y;
+    queueTimecode();
+  }, { passive: true });
+
+  /* boost — насколько лента ускоряется от прокрутки (0 — не реагирует) */
+  function infiniteRow(row, dir, speed, boost) {
     var originals = Array.prototype.slice.call(row.children);
     if (!originals.length) return;
 
@@ -155,12 +165,17 @@
     window.addEventListener('load', measure);
 
     var rafId = null;
+    var lastT = 0;
 
-    function tick() {
+    /* Скорость задана в пикселях за кадр 60 Гц и пересчитывается по реальному времени:
+       иначе на мониторах 120–144 Гц ленты ехали бы в 2–2.4 раза быстрее */
+    function tick(t) {
       rafId = null;
-      if (!visible) return;
+      if (!visible) { lastT = 0; return; }
 
-      x += dir * speed;
+      var k = lastT ? Math.min((t - lastT) / 16.667, 3) : 1;
+      lastT = t;
+      x += dir * (speed + (boost ? scrollVel * boost : 0)) * k;
       if (unit > 0) {
         while (x <= -unit) x += unit;
         while (x > 0) x -= unit;
@@ -191,8 +206,21 @@
   }
 
   if (!reduced) {
+    /* Лента вдвое медленнее фото-рядов (0.35), чтобы не выглядела прилепленной к ним,
+       и слегка ускоряется от прокрутки: обычный скролл даёт около +60%, рывок — до ×3 */
     var track = document.querySelector('.marquee__track');
-    if (track) infiniteRow(track, -1, 0.5);
+    if (track) infiniteRow(track, -1, 0.17, 0.004);
+
+    /* Затухание скорости прокрутки — пока она есть */
+    (function decay() {
+      if (scrollVel > 0.05) {
+        scrollVel *= 0.9;
+        requestAnimationFrame(decay);
+      } else {
+        scrollVel = 0;
+        setTimeout(decay, 200);
+      }
+    })();
 
     document.querySelectorAll('.strip__row').forEach(function (row) {
       infiniteRow(row, parseFloat(row.getAttribute('data-strip-dir')) || -1, 0.35);
@@ -230,14 +258,26 @@
     });
 
     /* Фото-пилюля: медленный зум внутри при скролле (DESIGN.md §3) */
-    gsap.fromTo('.film__pill img', { scale: 1.4 }, {
-      scale: 1.05, ease: 'none',
+    gsap.fromTo('.film__pill img', { scale: 2.5 }, {
+      scale: 2.1, ease: 'none',
       scrollTrigger: { trigger: '.film', start: 'top bottom', end: 'bottom top', scrub: true }
     });
 
     gsap.fromTo('.film__photo img', { scale: 1.12 }, {
       scale: 1, ease: 'none',
       scrollTrigger: { trigger: '.film__photo', start: 'top bottom', end: 'bottom 40%', scrub: true }
+    });
+
+    /* Второе фото проявляется снизу и доворачивается в свой наклон */
+    gsap.from('.film__photo', {
+      scrollTrigger: { trigger: '.film__body', start: 'top 80%' },
+      clipPath: 'inset(100% 0% 0% 0%)', rotation: 2, y: 40, duration: 1.1, ease: 'power4.out'
+    });
+
+    /* Хронометраж заполняется, пока полоса проходит через экран */
+    gsap.to('.chrono__fill', {
+      scaleX: 1, ease: 'none',
+      scrollTrigger: { trigger: '.chrono', start: 'top 95%', end: 'top 20%', scrub: true }
     });
 
     /* Хлопушка «хлопает» один раз при появлении */

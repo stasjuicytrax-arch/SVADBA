@@ -98,9 +98,9 @@
           <div class="hero__veil"></div>
 
           <h1 class="hero__center">
-            <span class="hero__eyebrow">Свадебное агентство</span>
             <img class="hero__logo" src="assets/sections/01-hero/02-photo.png"
                  alt="В титрах" width="1000" height="340">
+            <span class="hero__eyebrow">Свадебное агентство</span>
             <span class="hero__slogan">Ваша любовь в главной роли. Мы — в титрах</span>
           </h1>
 
@@ -125,37 +125,43 @@
       </div>
     </section>
 
-    <!-- 02. Бегущая строка -->
-    <section class="marquee" aria-hidden="true">
-      <div class="marquee__track">
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+    <!-- 02–03. Лента-киноплёнка и фото-ряды — один модуль -->
+    <section class="reel">
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee__track">
+        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах</span>
+        <span class="marquee__sep"><svg class="asterisk asterisk--sm" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg><span class="marquee__tc">00:04:12:08</span></span>
+        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах</span>
+        <span class="marquee__sep"><svg class="asterisk asterisk--sm" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg><span class="marquee__tc">00:17:36:21</span></span>
+        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах</span>
+        <span class="marquee__sep"><svg class="asterisk asterisk--sm" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg><span class="marquee__tc">00:42:08:02</span></span>
+        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах</span>
+        <span class="marquee__sep"><svg class="asterisk asterisk--sm" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg><span class="marquee__tc">01:05:51:14</span></span>
+        </div>
       </div>
-    </section>
 
-    <!-- 03. Фото-лента №1 — две строки навстречу -->
-    <section id="photo-strip-1" class="strip" aria-label="Кадры со свадеб">
-      <div class="strip__row" data-strip-dir="-1">
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="" loading="lazy" width="1202" height="1503"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="" loading="lazy" width="1680" height="2525"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
-      </div>
-      <div class="strip__row" data-strip-dir="1">
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="" loading="lazy" width="1202" height="1503"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="" loading="lazy" width="1680" height="2525"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+      <!-- 03. Фото-лента №1 — две строки навстречу -->
+      <div id="photo-strip-1" class="strip" role="group" aria-label="Кадры со свадеб">
+        <div class="strip__row" data-strip-dir="-1">
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="" loading="lazy" width="1202" height="1503"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="" loading="lazy" width="1680" height="2525"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+        </div>
+        <div class="strip__row" data-strip-dir="1">
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="" loading="lazy" width="1202" height="1503"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="" loading="lazy" width="1680" height="2525"></figure>
+          <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+        </div>
       </div>
     </section>
 
@@ -165,12 +171,27 @@
         <p class="wordmark__eyebrow">
           <span>Сценарий</span><i></i><span>Свадебное агентство</span><i></i><span>Финальные титры</span>
         </p>
-        <h2 class="wordmark__big">«В ТИТРАХ»</h2>
 
-        <figure class="wordmark__stage">
-          <img class="wordmark__photo" src="assets/sections/03-agency-title/02-2d505dd9f9243c668e48.jpg"
-               alt="Пара танцует на сцене у красного бархатного занавеса, кадр в рамке киноплёнки" loading="lazy" width="1024" height="768">
-        </figure>
+        <div class="wordmark__row">
+          <span class="wordmark__side">Пермь · с 2016</span>
+          <h2 class="wordmark__big">«В ТИТРАХ»</h2>
+          <span class="wordmark__side wordmark__side--tc" aria-hidden="true">00:20:16:00</span>
+        </div>
+
+        <div class="wordmark__stagebox">
+          <dl class="wordmark__meta">
+            <dt>Формат</dt>
+            <dd>Полный продакшн</dd>
+          </dl>
+          <figure class="wordmark__stage">
+            <img class="wordmark__photo" src="assets/sections/03-agency-title/02-2d505dd9f9243c668e48.jpg"
+                 alt="Пара танцует на сцене у красного бархатного занавеса, кадр в рамке киноплёнки" loading="lazy" width="1024" height="768">
+          </figure>
+          <dl class="wordmark__meta wordmark__meta--right">
+            <dt>Город</dt>
+            <dd>Любой</dd>
+          </dl>
+        </div>
 
         <p class="wordmark__lead">Организуем истории, которые хочется пересматривать</p>
       </div>
@@ -182,9 +203,9 @@
         <div class="film__head">
           <svg class="asterisk" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg>
           <h2 class="film__title">
-            <span class="film__line">Для нас каждая пара —</span>
+            <span class="film__line">Для нас каждая пара&nbsp;—</span>
             <span class="film__line film__line--mute">это совершенно</span>
-            <span class="film__line film__line--shift">особый <span class="film__pill"><img src="assets/sections/04-about-osobyi-film/03-9a12435b3e3eddc07090.jpg" alt="" loading="lazy" width="1024" height="1024"></span> фильм</span>
+            <span class="film__line film__line--shift">особый <span class="film__pill"><img src="assets/galleries/01-damir-nadezhda/10-DSC01249.jpg" alt="" loading="lazy" width="1680" height="2520"></span> фильм</span>
           </h2>
         </div>
 
@@ -193,6 +214,12 @@
             <img src="assets/sections/04-about-osobyi-film/03-9a12435b3e3eddc07090.jpg"
                  alt="Чёрно-белый портрет жениха и невесты в рамке киноплёнки" loading="lazy" width="1024" height="1024">
           </figure>
+
+          <p class="film__stat">
+            <span class="film__stat-num">6−9</span>
+            <span class="film__stat-label">месяцев до свадьбы — идеальный срок для подготовки</span>
+          </p>
+
           <div class="film__text">
             <img class="film__clapper" src="assets/sections/04-about-osobyi-film/02-_1.svg" alt="" width="196" height="231" loading="lazy">
             <p>У каждой пары свой сценарий - своя любовь, мы берём на себя всю техническую магию по созданию вашего фильма: локации, свет, звук, монтаж.</p>
@@ -207,30 +234,42 @@
         <h2 class="backstage__title">Мы не х<span class="backstage__strike">о</span>дим в кадре</h2>
 
         <div class="backstage__grid">
-          <p class="backstage__text">Мы контролируем площадку, помогаем невесте, проверяем звук микрофона и шепотом просим расступиться, когда идёт невеста. Наши имена появятся в конце, но работать начинаем за 6 месяцев до премьеры</p>
+          <div class="backstage__copy">
+            <p class="backstage__text">Мы контролируем площадку, помогаем невесте, проверяем звук микрофона и шепотом просим расступиться, когда идёт невеста. Наши имена появятся в конце, но работать начинаем за 6 месяцев до премьеры</p>
+            <p class="backstage__quote">Создадим фильм, в котором оживет именно ваша история любви</p>
+          </div>
 
-          <div class="fan">
-            <figure class="fan__card fan__card--left"><img src="assets/sections/05-behind-the-scenes/02-1230876b743acedfc33b.jpg" alt="Свадебное платье, расшитое стразами" loading="lazy" width="768" height="1024"></figure>
-            <figure class="fan__card fan__card--right"><img src="assets/sections/05-behind-the-scenes/03-fe88687e2a3f124b8d51.png" alt="Две девушки на свадьбе" loading="lazy" width="1086" height="1448"></figure>
-            <figure class="fan__card fan__card--center"><img src="assets/sections/05-behind-the-scenes/04-0c11e202b7398e684289.jpg" alt="Ведущая с микрофоном на свадьбе" loading="lazy" width="768" height="1024"></figure>
+          <div class="backstage__media">
+            <div class="fan">
+              <figure class="fan__card fan__card--left"><img src="assets/sections/05-behind-the-scenes/02-1230876b743acedfc33b.jpg" alt="Свадебное платье, расшитое стразами" loading="lazy" width="768" height="1024"></figure>
+              <figure class="fan__card fan__card--right"><img src="assets/sections/05-behind-the-scenes/03-fe88687e2a3f124b8d51.png" alt="Две девушки на свадьбе" loading="lazy" width="1086" height="1448"></figure>
+              <figure class="fan__card fan__card--center"><img src="assets/sections/05-behind-the-scenes/04-0c11e202b7398e684289.jpg" alt="Ведущая с микрофоном на свадьбе" loading="lazy" width="768" height="1024"></figure>
+            </div>
+
+            <ul class="stats">
+              <li class="stats__item"><span class="stats__num">6</span><span class="stats__label">месяцев до премьеры</span></li>
+              <li class="stats__item"><span class="stats__num">1</span><span class="stats__label">команда за кадром</span></li>
+              <li class="stats__item"><span class="stats__num">0</span><span class="stats__label">шаблонов</span></li>
+            </ul>
           </div>
         </div>
-
-        <ul class="stats">
-          <li class="stats__item"><span class="stats__num">6</span><span class="stats__label">месяцев до премьеры</span></li>
-          <li class="stats__item"><span class="stats__num">1</span><span class="stats__label">команда за кадром</span></li>
-          <li class="stats__item"><span class="stats__num">0</span><span class="stats__label">шаблонов</span></li>
-        </ul>
-
-        <p class="backstage__quote">Создадим фильм, в котором оживет именно ваша история любви</p>
       </div>
     </section>
+
+    <!-- Полоса-хронометраж между «не ходим в кадре» и формой -->
+    <div class="chrono" aria-hidden="true">
+      <div class="chrono__scale"><span class="chrono__fill"></span></div>
+      <div class="chrono__marks"><span>00:00:00</span><span>00:15:00</span><span>00:30:00</span><span>00:45:00</span><span>01:00:00</span><span>01:15:00</span><span>01:30:00</span></div>
+    </div>
 
     <!-- 07. Форма заявки №1 — «билет» -->
     <section id="form-1" class="section section--screen panel-cut request">
       <div class="container">
         <div class="ticket">
           <div class="ticket__stub">
+            <figure class="ticket__photo">
+              <img src="assets/galleries/01-damir-nadezhda/11-DSC01724.jpg" alt="Жених и невеста машут руками на фоне красного бархатного занавеса" loading="lazy" width="1680" height="2520">
+            </figure>
             <h2 class="ticket__title">Оставьте заявку</h2>
             <p class="ticket__lead">и мы начнём подготовку к вашей премьере</p>
           </div>
@@ -472,11 +511,9 @@
       <p class="footer__legal">* Суд признал экстремистской и запретил в России деятельность корпорации Meta по реализации социальных сетей</p>
       <p class="footer__copy">2016 © Все права защищены · <a href="http://help-wedding.ru/policy">Политика конфиденциальности</a></p>
     </div>
-
-    <div class="footer__logo" aria-hidden="true">
-      <img src="assets/sections/01-hero/02-photo.png" alt="" loading="lazy" width="1000" height="340">
-    </div>
   </footer>
+
+  <div class="grain" aria-hidden="true"></div>
 
   <script src="js/vendor/gsap.min.js"></script>
   <script src="js/vendor/ScrollTrigger.min.js"></script>

@@ -325,6 +325,20 @@ body.is-locked {
   overflow: hidden;
 }
 
+/* Плёночное зерно на весь сайт (DESIGN.md §7). Лежит поверх контента, а не под ним:
+   под непрозрачными панелями и фото его было бы не видно. overlay при 5% почти не
+   трогает текст: светлый остаётся как был, тёмный темнеет на доли процента.
+   Ниже шапки (95), меню (94), таймкода (90) и галереи (200) */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 85;
+  pointer-events: none;
+  background: url("../assets/sections/06-form/02-noise.gif") center / 260px;
+  opacity: .05;
+  mix-blend-mode: overlay;
+}
+
 /* Страницы документов: politika.html, soglasie.html (docs/LEGAL.md §2.1) */
 .doc-page {
   padding: var(--frame);
@@ -377,6 +391,9 @@ body.is-locked {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Зерно — анимированный GIF: при просьбе о меньшем движении не показываем */
+  .grain { display: none; }
+
   *,
   *::before,
   *::after {

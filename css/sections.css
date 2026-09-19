@@ -406,22 +406,43 @@
 }
 
 /* --------------------------------------------------------------------------
-   02. Бегущая строка — одна, горизонтальная
+   02–03. Лента-киноплёнка и фото-ряды — один модуль, общий фон, шаг 16px
    -------------------------------------------------------------------------- */
+.reel {
+  display: grid;
+  gap: 16px;
+  margin-block: 40px;
+}
+
 .marquee {
-  margin-top: 40px;
-  padding-block: 12px;
-  background: var(--red-brand);
   overflow: hidden;
 }
 
+/* Плёнка: винная основа, перфорация сверху и снизу едет вместе с текстом */
 .marquee__track {
+  position: relative;
   display: flex;
-  gap: 2rem;
+  align-items: center;
+  gap: 28px;
   width: max-content;
+  padding: 24px 14px;
+  background: var(--wine);
   white-space: nowrap;
   will-change: transform;
 }
+
+.marquee__track::before,
+.marquee__track::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 9px;
+  background: repeating-linear-gradient(90deg, transparent 0 12px, var(--night) 12px 22px);
+}
+
+.marquee__track::before { top: 6px; }
+.marquee__track::after { bottom: 6px; }
 
 .marquee__item {
   font-family: var(--font-display);
@@ -432,20 +453,28 @@
   color: var(--paper);
 }
 
-/* «//» крупнее текста: от 19px при 700 это крупный текст с порогом 3:1, --night даёт 3.62:1 */
-.marquee__item i {
-  font-style: normal;
-  font-size: 1.25em;
-  color: var(--night);
+.marquee__sep {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
-/* --------------------------------------------------------------------------
-   03. Фото-лента — две строки навстречу, кадры одной пропорции
-   -------------------------------------------------------------------------- */
+.asterisk--sm {
+  width: 16px;
+  height: 16px;
+}
+
+.marquee__tc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .12em;
+  color: var(--rose-soft);
+  font-variant-numeric: tabular-nums;
+}
+
 .strip {
   display: grid;
   gap: 16px;
-  padding-block: clamp(40px, 6vh, 72px);
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0, #000 8%, #000 92%, transparent 100%);
@@ -493,9 +522,7 @@
   color: var(--rose-ink);
 }
 
-.wordmark__eyebrow span {
-  white-space: nowrap;
-}
+.wordmark__eyebrow span { white-space: nowrap; }
 
 .wordmark__eyebrow i {
   flex: 1;
@@ -503,19 +530,75 @@
   background: rgba(62, 2, 4, .22);
 }
 
+/* Вордмарк во всю ширину, по бокам — вертикальные mono-подписи */
+.wordmark__row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 1.6vw, 24px);
+}
+
+.wordmark__side {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  white-space: nowrap;
+  color: var(--rose-ink);
+}
+
+.wordmark__side--tc {
+  transform: none;
+  font-variant-numeric: tabular-nums;
+}
+
 .wordmark__big {
   margin: 0;
   text-align: center;
-  font-size: clamp(2.2rem, 14vw, 13rem);
+  font-size: clamp(2.2rem, 15.2vw, 14.6rem);
   line-height: .86;
   letter-spacing: -0.05em;
+  white-space: nowrap;
   color: var(--maroon);
 }
 
-.wordmark__stage {
-  width: min(720px, 100%);
-  margin: 48px auto 0;
+/* Под вордмарком: слева и справа от фото — короткие mono-колонки */
+.wordmark__stagebox {
+  display: grid;
+  grid-template-columns: 1fr min(720px, 100%) 1fr;
+  align-items: end;
+  gap: clamp(16px, 2.4vw, 40px);
+  margin-top: 48px;
 }
+
+.wordmark__meta {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(62, 2, 4, .22);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+}
+
+.wordmark__meta dt {
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: var(--rose-ink);
+}
+
+.wordmark__meta dd {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: .1em;
+  color: var(--maroon);
+}
+
+.wordmark__meta--right { text-align: right; }
+
+.wordmark__stage { margin: 0; }
 
 .wordmark__photo {
   display: block;
@@ -552,7 +635,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   05. О нас — «Особый фильм»: лесенка, два цвета, фото-пилюля в строке
+   05. О нас — «Особый фильм»: лесенка во всю ширину, капсула-фото в строке
    -------------------------------------------------------------------------- */
 .film {
   padding-block: clamp(80px, 11vw, 140px);
@@ -573,58 +656,58 @@
 
 .film__title {
   margin: 0;
-  font-size: clamp(2.1rem, 6.4vw, 6rem);
+  font-size: clamp(1.9rem, 6.6vw, 6rem);
   line-height: .95;
   letter-spacing: -0.045em;
   color: var(--maroon);
 }
 
-.film__line {
-  display: block;
-}
+.film__line { display: block; }
 
 /* Вторая строка двухцветного заголовка; --rose-ink вместо --rose-mute ради контраста (4.85:1) */
 .film__line--mute {
   color: var(--rose-ink);
-  padding-left: 1.2em;
+  padding-left: 1.4em;
 }
 
-.film__line--shift {
-  padding-left: 2.4em;
-}
+.film__line--shift { padding-left: 2.8em; }
 
-/* Фото-пилюля внутри строки: высота 0.8em, как в реф. 1 */
+/* Капсула 4:5 прямо в строке — лица крупно */
 .film__pill {
   display: inline-block;
-  width: 1.9em;
-  height: .8em;
-  margin-inline: .08em;
+  width: .72em;
+  height: .9em;
+  margin-inline: .06em;
   border-radius: var(--radius-pill);
   overflow: hidden;
-  vertical-align: .04em;
+  vertical-align: -.04em;
 }
 
 .film__pill img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 32%;
-  transform: scale(1.15);
+  object-position: 52% 40%;
+  transform: scale(2.1);
+  transform-origin: 52% 40%;
 }
 
 .film__body {
   display: grid;
-  gap: clamp(32px, 5vw, 72px);
+  gap: clamp(32px, 4vw, 64px);
   margin-top: clamp(48px, 7vw, 96px);
   align-items: end;
 }
 
+/* Второе фото в свободном поле — под наклоном, проявляется при скролле */
 .film__photo {
   margin: 0;
-  width: min(420px, 100%);
+  width: min(380px, 100%);
   aspect-ratio: 1;
   border-radius: var(--radius-photo);
   overflow: hidden;
+  transform: rotate(-4deg);
+  box-shadow: 0 30px 50px -30px rgba(26, 5, 3, .55);
 }
 
 .film__photo img {
@@ -633,16 +716,40 @@
   object-fit: cover;
 }
 
+.film__stat {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.film__stat-num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  line-height: .85;
+  letter-spacing: -0.05em;
+  color: var(--maroon);
+}
+
+.film__stat-label {
+  max-width: 20ch;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  line-height: 1.5;
+  color: var(--rose-ink);
+}
+
 .film__text {
   display: grid;
   gap: 24px;
-  width: min(440px, 100%);
-  justify-self: end;
+  width: min(380px, 100%);
 }
 
 .film__text p {
   margin: 0;
-  font-size: clamp(1.05rem, 1.3vw, 1.25rem);
+  font-size: clamp(1.05rem, 1.3vw, 1.2rem);
   line-height: 1.55;
   color: var(--ink);
 }
@@ -654,11 +761,12 @@
 }
 
 /* --------------------------------------------------------------------------
-   06. «Мы не ходим в кадре» — тёмная секция, веер фото, стат-строка
+   06. «Мы не ходим в кадре» — тёмная секция, веер фото, mono стат-строка
    -------------------------------------------------------------------------- */
 .backstage {
-  padding-block: clamp(96px, 12vw, 160px);
-  background: radial-gradient(80% 60% at 50% 100%, rgba(202, 38, 21, .28), transparent 70%), var(--night);
+  padding-block: clamp(96px, 12vw, 160px) clamp(40px, 5vw, 64px);
+  /* Свечение в середине, к низу гаснет в --night: снизу нет обрыва о хронометраж */
+  background: radial-gradient(70% 55% at 50% 55%, rgba(202, 38, 21, .22), transparent 72%), var(--night);
   color: var(--paper);
   overflow: hidden;
 }
@@ -691,7 +799,12 @@
   display: grid;
   gap: clamp(48px, 6vw, 96px);
   margin-top: clamp(40px, 6vw, 80px);
-  align-items: center;
+  align-items: start;
+}
+
+.backstage__copy {
+  display: grid;
+  gap: clamp(32px, 4vw, 56px);
 }
 
 .backstage__text {
@@ -700,6 +813,18 @@
   font-size: clamp(1.05rem, 1.3vw, 1.25rem);
   line-height: 1.6;
   color: var(--paper);
+}
+
+.backstage__quote {
+  margin: 0;
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.5rem, 2.8vw, 2.6rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--rose-soft);
 }
 
 /* Веер: центральный кадр выше и поверх, крайние развёрнуты; от скролла раскрывается */
@@ -730,18 +855,21 @@
 .fan__card--right { transform: translateX(72%) rotate(9deg); }
 .fan__card--center { transform: translateY(-14%); z-index: 2; }
 
+/* Стат-строка под фото: mono, тонкие вертикальные разделители (реф. 3) */
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  margin-top: clamp(56px, 7vw, 96px);
+  margin-top: 40px;
   border-top: 1px solid var(--line-dark);
   border-bottom: 1px solid var(--line-dark);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
 }
 
 .stats__item {
   display: grid;
   gap: 6px;
-  padding: clamp(20px, 3vw, 36px) clamp(12px, 2.4vw, 32px);
+  padding: 18px clamp(12px, 1.6vw, 22px);
 }
 
 .stats__item + .stats__item {
@@ -749,33 +877,76 @@
 }
 
 .stats__num {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(2.6rem, 6vw, 5.5rem);
-  line-height: .9;
-  letter-spacing: -0.05em;
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+  line-height: 1;
   color: var(--paper);
 }
 
 .stats__label {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
+  font-size: 11px;
   letter-spacing: .12em;
+  line-height: 1.4;
   color: var(--rose-soft);
 }
 
-.backstage__quote {
-  margin: clamp(48px, 6vw, 80px) 0 0;
-  max-width: 22ch;
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: clamp(1.6rem, 3.6vw, 3.4rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  text-transform: uppercase;
-  color: var(--rose-soft);
+/* --------------------------------------------------------------------------
+   Полоса-хронометраж: шкала плёнки, заполняется при скролле
+   -------------------------------------------------------------------------- */
+.chrono {
+  height: 72px;
+  margin-inline: var(--frame);
+  padding: 18px clamp(4px, 2vw, 40px) 0;
 }
+
+.chrono__scale {
+  position: relative;
+  height: 12px;
+  border-bottom: 1px solid var(--line-dark);
+  background-image: repeating-linear-gradient(90deg, var(--line-dark) 0 1px, transparent 1px 100%);
+  background-size: 12px 6px;
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+}
+
+.chrono__fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.chrono__marks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  color: var(--rose-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Крупная засечка над каждой меткой */
+.chrono__marks span {
+  position: relative;
+}
+
+.chrono__marks span::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 8px);
+  width: 1px;
+  height: 14px;
+  background: rgba(247, 242, 236, .4);
+}
+
+.chrono__marks span:first-child::before { left: 0; }
+.chrono__marks span:last-child::before { left: auto; right: 0; }
 
 /* --------------------------------------------------------------------------
    07. Форма-«билет»: корешок + поля-титры, перфорация между частями
@@ -798,7 +969,7 @@
 .ticket__stub {
   position: relative;
   display: grid;
-  align-content: end;
+  align-content: space-between;
   gap: 12px;
   padding: clamp(32px, 4vw, 56px);
   background: var(--wine);
@@ -815,6 +986,22 @@
   background: url("../assets/sections/06-form/02-noise.gif") center / 320px;
   opacity: .07;
   mix-blend-mode: screen;
+}
+
+/* Фото пары 4:5 со срезанными углами — тот же приём, что у панелей */
+.ticket__photo {
+  --c: 16px;
+  margin: 0 0 20px;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  clip-path: polygon(var(--c) 0, calc(100% - var(--c)) 0, 100% var(--c), 100% calc(100% - var(--c)), calc(100% - var(--c)) 100%, var(--c) 100%, 0 calc(100% - var(--c)), 0 var(--c));
+}
+
+.ticket__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 32%;
 }
 
 .ticket__title {
@@ -835,6 +1022,7 @@
 .ticket__done {
   position: relative;
   display: grid;
+  align-content: center;
   gap: 22px;
   padding: clamp(28px, 4vw, 56px);
 }
@@ -1295,7 +1483,7 @@
 /* Переход из --night в --night-deep градиентом: плоская смена давала линию-стык */
 .site-footer {
   background: linear-gradient(180deg, var(--night) 0, var(--night-deep) 180px);
-  padding-top: 96px;
+  padding-block: 96px 48px;
   overflow: hidden;
 }
 
@@ -1457,31 +1645,6 @@
 
 .footer__copy a { text-decoration: underline; text-underline-offset: 3px; }
 
-/* Гигантский логотип на всю ширину, обрезан по середине нижней строки */
-.footer__logo {
-  position: relative;
-  margin: 48px var(--frame) 0;
-  aspect-ratio: 1000 / 265;
-  overflow: hidden;
-}
-
-.footer__logo img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* Тон логотипа: darken берёт более тёмный цвет — белые буквы становятся ровно --wine-2,
-   а тёмный фон под слоем не меняется (фильтры sepia/hue-rotate давали оливковый) */
-.footer__logo::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--wine-2);
-  mix-blend-mode: darken;
-  pointer-events: none;
-}
-
 /* --------------------------------------------------------------------------
    Адаптив
    -------------------------------------------------------------------------- */
@@ -1522,7 +1685,23 @@
 
   .film__line--mute { padding-left: .6em; }
   .film__line--shift { padding-left: 1.2em; }
-  .film__text { justify-self: start; }
+  .film__photo { width: min(300px, 86%); justify-self: center; }
+
+  .wordmark__side { display: none; }
+  .wordmark__row { grid-template-columns: 1fr; }
+  .wordmark__big { font-size: 14vw; }
+
+  .wordmark__stagebox {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "photo photo" "left right";
+  }
+
+  .wordmark__stage { grid-area: photo; }
+  .wordmark__meta { grid-area: left; }
+  .wordmark__meta--right { grid-area: right; }
+
+  /* display, а не visibility: скрытые через visibility метки занимали место и давали горизонтальный скролл */
+  .chrono__marks span:nth-child(even) { display: none; }
 
   .ticket__field { grid-template-columns: 1fr; }
   .ticket__label { padding-bottom: 0; }
@@ -1537,9 +1716,19 @@
   .curtain { display: none; }
 
   /* Явная ширина колонки фото: auto брал натуральные 1024px картинки и сжимал текст до 185px */
-  .film__body { grid-template-columns: min(420px, 40%) 1fr; }
+  /* Фото | цифра | текст. Явные ширины: auto брал натуральную ширину картинки */
+  .film__body { grid-template-columns: min(380px, 32%) 1fr min(380px, 32%); }
+  .film__stat { justify-self: end; padding-bottom: 8px; }
 
   .backstage__grid { grid-template-columns: 1fr 1.15fr; }
+
+  .ticket__stub { padding-bottom: clamp(32px, 4vw, 56px); }
+
+  .footer__grid {
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(48px, 6vw, 120px);
+    align-items: start;
+  }
 
   .ticket { grid-template-columns: minmax(280px, .8fr) 1.2fr; }
 
@@ -1573,5 +1762,6 @@ body.is-intro { overflow: hidden; }
   .credits__roll { animation: none; }
   .asterisk { animation: none; }
   .ticket__stub::before { display: none; }
+  .chrono__fill { transform: none; }
   .credits__list[aria-hidden="true"] { display: none; }
 }
