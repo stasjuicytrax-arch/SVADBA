@@ -7,9 +7,6 @@
 
   /* ---------------------------------------------------------------- Интро */
   var screen = document.getElementById('heroScreen');
-  var heroLogo = document.querySelector('.hero__logo');
-  var heroEyebrow = document.querySelector('.hero__eyebrow');
-  var heroCards = document.querySelectorAll('.hero__card');
   var introDone = false;
 
   function endIntro() {
@@ -19,9 +16,9 @@
     if (lenis) lenis.start();
   }
 
-  if (reduced || !hasGsap) {
-    endIntro();
-  } else {
+  if (!reduced && hasGsap) {
+    /* Класс ставится из JS: в разметке он запер бы страницу без скриптов */
+    document.body.classList.add('is-intro');
     if (lenis) lenis.stop();
 
     var intro = gsap.timeline({ onComplete: endIntro });
@@ -30,28 +27,39 @@
       .fromTo(screen,
         { clipPath: 'inset(0% 50% 0% 50%)' },
         { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power4.out' })
-      .from('.hero__bg', { scale: 1.22, duration: 1.4, ease: 'power3.out' }, 0)
-      .from([heroEyebrow, heroLogo], { y: 28, opacity: 0, duration: .7, stagger: .1, ease: 'power3.out' }, 0.55)
-      .from(heroCards, { y: 20, opacity: 0, duration: .6, stagger: .08, ease: 'power3.out' }, 0.8)
-      .from('.hero__scroll', { opacity: 0, duration: .5 }, 1.0);
+      .from('.hero__bg', { scale: 1.18, duration: 1.4, ease: 'power3.out' }, 0)
+      .from('.hero__eyebrow', { y: 20, opacity: 0, duration: .7, ease: 'power3.out' }, 0.55)
+      .from('.hero__logo', { y: 28, opacity: 0, duration: .8, ease: 'power3.out' }, 0.65)
+      .from('.hero__card', { y: 20, opacity: 0, duration: .6, stagger: .08, ease: 'power3.out' }, 0.85)
+      .from('.hero__scroll', { opacity: 0, duration: .5 }, 1.05);
 
-    /* Интро можно пропустить кликом */
-    document.addEventListener('click', function skip() {
+    var skip = function () {
       if (introDone) return;
       intro.progress(1);
       document.removeEventListener('click', skip);
-    }, { once: false });
+      document.removeEventListener('keydown', skip);
+    };
+
+    document.addEventListener('click', skip);
+    document.addEventListener('keydown', skip);
   }
 
   /* ----------------------------------------------------------- Таймкод */
+  var timecode = document.getElementById('timecode');
   var tcValue = document.getElementById('timecodeValue');
   var tcProgress = document.getElementById('timecodeProgress');
+  var scrollMax = 0;
+  var tcQueued = false;
+
+  function measureScroll() {
+    scrollMax = document.documentElement.scrollHeight - window.innerHeight;
+  }
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
   function renderTimecode() {
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    var p = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    tcQueued = false;
+    var p = scrollMax > 0 ? Math.min(Math.max(window.scrollY / scrollMax, 0), 1) : 0;
 
     /* Прогресс страницы читается как хронометраж фильма: 90 минут при 24 к/с */
     var frames = Math.round(p * 90 * 60 * 24);
@@ -67,11 +75,31 @@
     tcProgress.style.width = (p * 100) + '%';
   }
 
-  window.addEventListener('scroll', renderTimecode, { passive: true });
-  window.addEventListener('resize', renderTimecode);
+  function queueTimecode() {
+    if (tcQueued) return;
+    tcQueued = true;
+    requestAnimationFrame(renderTimecode);
+  }
+
+  measureScroll();
   renderTimecode();
 
-  /* ------------------------------------------- Бесконечные ленты (02, 03) */
+  /* Таймкод висит поверх всего; над светлыми «экранами» светлые цвета давали 2.4:1 */
+  var lightScreens = document.querySelectorAll('.section--screen');
+  if (lightScreens.length && 'IntersectionObserver' in window) {
+    var onLight = new Set();
+    var tcObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) onLight.add(entry.target);
+        else onLight.delete(entry.target);
+      });
+      timecode.classList.toggle('timecode--on-light', onLight.size > 0);
+    }, { rootMargin: '0px 0px -100% 0px' });
+
+    lightScreens.forEach(function (el) { tcObserver.observe(el); });
+  }
+
+  /* --------------------------------------------------- Бесконечные ленты */
   var scrollDir = -1;
   var scrollVel = 0;
   var prevY = window.scrollY;
@@ -82,8 +110,11 @@
     if (d !== 0) scrollDir = d > 0 ? -1 : 1;
     scrollVel = Math.min(Math.abs(d), 90);
     prevY = y;
+    queueTimecode();
   }, { passive: true });
 
+  /* followScroll: лента реагирует на скорость и направление прокрутки (ТЗ блок 02).
+     Без него лента едет ровно сама по себе. */
   function infiniteRow(row, baseDir, baseSpeed, followScroll) {
     var originals = Array.prototype.slice.call(row.children);
     if (!originals.length) return;
@@ -91,26 +122,54 @@
     var gap = parseFloat(getComputedStyle(row).columnGap) || 0;
     var unit = 0;
     var x = 0;
+    var visible = true;
 
     function measure() {
+      /* Клоны удаляются перед пересчётом: иначе каждый resize наращивал DOM */
+      row.querySelectorAll('[data-clone]').forEach(function (n) { n.remove(); });
+
       unit = originals.reduce(function (sum, node) {
         return sum + node.getBoundingClientRect().width + gap;
       }, 0);
 
+      /* Лента сдвигается до -unit, поэтому за точкой сдвига должна оставаться
+         ещё минимум ширина окна текста — иначе в кадре пустота */
+      var need = unit + window.innerWidth;
       var guard = 0;
-      while (row.scrollWidth < window.innerWidth * 2 && guard < 8) {
-        originals.forEach(function (node) { row.appendChild(node.cloneNode(true)); });
+      while (row.scrollWidth < need && guard < 8) {
+        originals.forEach(function (node) {
+          var clone = node.cloneNode(true);
+          clone.setAttribute('data-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          row.appendChild(clone);
+        });
         guard++;
       }
     }
 
     measure();
-    window.addEventListener('resize', measure);
+
+    /* Только изменение ширины: на мобиле адресная строка шлёт resize по высоте */
+    var lastWidth = window.innerWidth;
+    var resizeTimer = null;
+
+    window.addEventListener('resize', function () {
+      if (window.innerWidth === lastWidth) return;
+      lastWidth = window.innerWidth;
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(measure, 200);
+    });
+
     window.addEventListener('load', measure);
 
-    (function tick() {
+    var rafId = null;
+
+    function tick() {
+      rafId = null;
+      if (!visible) return;
+
       var dir = followScroll ? baseDir * scrollDir * -1 : baseDir;
-      var speed = baseSpeed + scrollVel * 0.05;
+      var speed = followScroll ? baseSpeed + scrollVel * 0.05 : baseSpeed;
 
       x += dir * speed;
       if (unit > 0) {
@@ -119,31 +178,65 @@
       }
 
       row.style.transform = 'translate3d(' + x + 'px,0,0)';
-      scrollVel *= 0.92;
-      requestAnimationFrame(tick);
-    })();
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function start() {
+      if (rafId === null && visible) rafId = requestAnimationFrame(tick);
+    }
+
+    /* Лента за пределами экрана не должна жечь батарею.
+       Заодно догружаем кадры: lazy не срабатывает у картинок, спрятанных по горизонтали,
+       и они всплывали бы пустыми, когда лента их довезёт */
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        if (visible) {
+          row.querySelectorAll('img[loading="lazy"]').forEach(function (img) { img.loading = 'eager'; });
+        }
+        start();
+      }, { rootMargin: '200px 0px' }).observe(row);
+    }
+
+    start();
   }
 
   if (!reduced) {
-    var marquee = document.getElementById('marqueeTrack');
-    if (marquee) infiniteRow(marquee, -1, 0.9, true);
-
-    document.querySelectorAll('.strip__row').forEach(function (row) {
-      var dir = parseFloat(row.getAttribute('data-strip-dir')) || -1;
-      infiniteRow(row, dir, 0.35, false);
+    document.querySelectorAll('.marquee__track').forEach(function (track) {
+      var dir = parseFloat(track.getAttribute('data-marquee-dir')) || -1;
+      infiniteRow(track, dir, 0.9, true);
     });
+
+    var strip = document.getElementById('stripRow');
+    if (strip) infiniteRow(strip, -1, 0.35, false);
+
+    /* Затухание скорости лент — только пока она есть */
+    (function decay() {
+      if (scrollVel > 0.01) {
+        scrollVel *= 0.92;
+        requestAnimationFrame(decay);
+      } else {
+        scrollVel = 0;
+        setTimeout(decay, 200);
+      }
+    })();
   }
+
+  window.addEventListener('resize', function () {
+    measureScroll();
+    queueTimecode();
+  });
 
   /* ------------------------------------------------ Появление блока 04 */
   if (!reduced && hasGsap) {
-    gsap.from('.wordmark__eyebrow, .wordmark__small', {
+    gsap.from('.wordmark__kicker', {
       scrollTrigger: { trigger: '.wordmark', start: 'top 78%' },
-      y: 24, opacity: 0, duration: .8, stagger: .08, ease: 'power3.out'
+      y: 20, opacity: 0, duration: .8, ease: 'power3.out'
     });
 
     gsap.from('.wordmark__big', {
       scrollTrigger: { trigger: '.wordmark', start: 'top 74%' },
-      y: 60, opacity: 0, duration: 1, ease: 'power4.out'
+      y: 50, opacity: 0, duration: 1, ease: 'power4.out'
     });
 
     gsap.fromTo('.wordmark__photo',
@@ -153,10 +246,10 @@
         clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power4.out'
       });
 
-    /* Лёгкий параллакс занавеса в hero */
+    /* Лёгкий параллакс занавеса */
     gsap.to('.hero__bg', {
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
-      yPercent: 12, ease: 'none'
+      yPercent: 10, ease: 'none'
     });
   }
 })();

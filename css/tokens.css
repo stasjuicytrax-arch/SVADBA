@@ -48,11 +48,11 @@
   --container-max: 1440px;
   --gutter: clamp(16px, 4vw, 56px);
   --section-gap: clamp(96px, 14vh, 180px);
-  /* Отступ светлых «экранов» от краёв окна (реф. 1) */
-  --frame: clamp(12px, 2vw, 24px);
+  /* Отступ светлых «экранов» от краёв окна и друг от друга (реф. 1) */
+  --frame: 16px;
 
   /* Радиусы, DESIGN.md §4 */
-  --radius-screen: 36px;
+  --radius-screen: 40px;
   --radius-card: 22px;
   --radius-photo: 18px;
   --radius-pill: 999px;

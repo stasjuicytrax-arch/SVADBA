@@ -6,18 +6,19 @@
   <title>В титрах — свадебное агентство</title>
   <meta name="description" content="Ваша любовь в главной роли. Мы — в титрах. Свадебное агентство «В титрах», Пермь.">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Onest:wght@400;500&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231B0100'/%3E%3Cg stroke='%23EB0F03' stroke-width='3.4' stroke-linecap='round'%3E%3Cpath d='M16 6v20M7.3 11l17.4 10M7.3 21l17.4-10'/%3E%3C/g%3E%3C/svg%3E">
 
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/sections.css">
 </head>
-<body class="is-intro">
+<body>
+
+  <a class="skip-link" href="#top">Перейти к содержанию</a>
 
   <!-- Линейка-таймкод (реф. 1) -->
-  <div class="timecode" aria-hidden="true">
+  <div class="timecode" id="timecode" aria-hidden="true">
     <div class="timecode__ruler"><span class="timecode__progress" id="timecodeProgress"></span></div>
     <span class="timecode__value" id="timecodeValue">00:00:00:00</span>
   </div>
@@ -41,20 +42,21 @@
       </nav>
 
       <div class="nav__side">
-        <a class="nav__icon" href="https://www.instagram.com/stastoropov/" target="_blank" rel="noopener" aria-label="Instagram">
+        <a class="nav__icon" href="https://www.instagram.com/stastoropov/" target="_blank" rel="noopener" title="Инстаграм*" aria-label="Инстаграм">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <rect x="3" y="3" width="18" height="18" rx="5"></rect>
             <circle cx="12" cy="12" r="4"></circle>
             <circle cx="17.2" cy="6.8" r="1.1" class="is-filled"></circle>
           </svg>
         </a>
-        <a class="nav__icon" href="https://t.me/stastoropov" target="_blank" rel="noopener" aria-label="Telegram">
+        <a class="nav__icon" href="https://t.me/stastoropov" target="_blank" rel="noopener" title="Телеграм" aria-label="Телеграм">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M21 4.5 2.8 11.4l5.1 1.7L19 6.4l-8.4 8.2.3 5 2.7-3.5 4.6 3.4z" class="is-filled"></path>
           </svg>
         </a>
-        <a class="nav__cta" href="#" data-popup="write">Написать нам</a>
       </div>
+
+      <a class="nav__cta" href="#" data-popup="write">Написать нам</a>
 
       <button class="nav__burger" id="navBurger" aria-label="Открыть меню" aria-expanded="false" aria-controls="navCurtain">
         <span></span><span></span>
@@ -63,8 +65,8 @@
   </header>
 
   <!-- Мобильное меню — тёмный «занавес» -->
-  <div class="curtain" id="navCurtain" hidden>
-    <nav class="curtain__inner" aria-label="Меню">
+  <div class="curtain" id="navCurtain" role="dialog" aria-modal="true" aria-label="Меню" hidden>
+    <nav class="curtain__inner">
       <ul class="curtain__menu">
         <li><a href="#top">главная</a></li>
         <li><a href="#about">О НАС</a></li>
@@ -79,8 +81,8 @@
         <li><a href="#reviews">благодарности</a></li>
       </ul>
       <div class="curtain__social">
-        <a href="https://www.instagram.com/stastoropov/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://t.me/stastoropov" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://www.instagram.com/stastoropov/" target="_blank" rel="noopener">Инстаграм*</a>
+        <a href="https://t.me/stastoropov" target="_blank" rel="noopener">Телеграм</a>
       </div>
     </nav>
   </div>
@@ -94,70 +96,73 @@
              alt="Красный бархатный занавес с хрустальными люстрами и композициями из красных роз" width="1680" height="1120">
         <div class="hero__veil"></div>
 
-        <div class="hero__content">
-          <p class="hero__eyebrow">Свадебное агентство</p>
+        <h1 class="hero__center">
+          <span class="hero__eyebrow">Свадебное агентство</span>
           <img class="hero__logo" src="assets/sections/01-hero/02-photo.png"
                alt="В титрах" width="1000" height="340">
-        </div>
+          <span class="hero__slogan">Ваша любовь в главной роли. Мы — в титрах</span>
+        </h1>
 
         <div class="hero__cards">
-          <p class="hero__card glass">Работаем за 6 месяцев до премьеры</p>
-          <p class="hero__card glass">Организуем истории, которые хочется пересматривать</p>
+          <p class="hero__card">Работаем за 6 месяцев до премьеры</p>
+          <p class="hero__card">Организуем истории, которые хочется пересматривать</p>
         </div>
 
         <a class="hero__scroll" href="#agency-title" aria-label="К следующему блоку">
-          <svg viewBox="0 0 12 64" aria-hidden="true" focusable="false">
-            <line x1="6" y1="0" x2="6" y2="54"></line>
-            <polyline points="1.5,48 6,56 10.5,48"></polyline>
+          <svg viewBox="0 0 12 56" aria-hidden="true" focusable="false">
+            <line x1="6" y1="0" x2="6" y2="46"></line>
+            <polyline points="1.5,40 6,48 10.5,40"></polyline>
           </svg>
         </a>
       </div>
     </section>
 
-    <!-- 02. Бегущая строка -->
-    <section class="marquee" aria-hidden="true">
-      <div class="marquee__track" id="marqueeTrack">
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
-        <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+    <!-- 02. Бегущая строка — две ленты крест-накрест -->
+    <section class="marquees" aria-hidden="true">
+      <div class="marquee marquee--red">
+        <div class="marquee__track" data-marquee-dir="-1">
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+        </div>
+      </div>
+      <div class="marquee marquee--wine">
+        <div class="marquee__track" data-marquee-dir="1">
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+          <span class="marquee__item">Ваша любовь в главной роли. Мы - в титрах <i>//</i></span>
+        </div>
       </div>
     </section>
 
     <!-- 03. Фото-лента №1 -->
     <section id="photo-strip-1" class="strip" aria-label="Кадры со свадеб">
-      <div class="strip__row" data-strip-dir="-1">
-        <figure class="strip__frame strip__frame--tall"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="Невеста крупным планом" loading="lazy" width="1202" height="1503"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="Невеста с букетом" loading="lazy" width="1680" height="2525"></figure>
-        <figure class="strip__frame strip__frame--short"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="Невеста у фонтана" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="Портрет невесты" loading="lazy" width="1680" height="2520"></figure>
-      </div>
-      <div class="strip__row strip__row--second" data-strip-dir="1">
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="Невеста в свадебном платье" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame strip__frame--short"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="Кадр со свадебной съёмки" loading="lazy" width="1680" height="1120"></figure>
-        <figure class="strip__frame strip__frame--tall"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="Невеста с букетом цветов" loading="lazy" width="1680" height="2519"></figure>
-        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="Портрет невесты в день свадьбы" loading="lazy" width="1680" height="2520"></figure>
+      <div class="strip__row" id="stripRow">
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/01-DSC04470.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/02-5876a3333e7efd881fb4.jpg" alt="" loading="lazy" width="1202" height="1503"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/03-AJ-73.jpg" alt="" loading="lazy" width="1680" height="2525"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/04-DSC00373.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/05-DSC04775.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/06-DSC05669.jpg" alt="" loading="lazy" width="1680" height="2519"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/07-DSC06583.jpg" alt="" loading="lazy" width="1680" height="1120"></figure>
+        <figure class="strip__frame"><img src="assets/sections/02-photo-strip/08-DSC09664.jpg" alt="" loading="lazy" width="1680" height="2520"></figure>
       </div>
     </section>
 
     <!-- 04. Свадебное агентство «В титрах» -->
     <section id="agency-title" class="section section--screen wordmark">
       <div class="container">
-        <p class="wordmark__eyebrow">
-          <span>Сценарий</span><i></i><span>Предпродакшн</span><i></i><span>Финальные титры</span>
-        </p>
+        <p class="wordmark__kicker">Свадебное агентство</p>
+        <h2 class="wordmark__big">«В ТИТРАХ»</h2>
 
-        <h2 class="wordmark__title">
-          <span class="wordmark__small">Свадебное агентство</span>
-          <span class="wordmark__big">В Т<em>И</em>ТРАХ</span>
-        </h2>
-
-        <div class="wordmark__stage">
+        <figure class="wordmark__stage">
           <img class="wordmark__photo" src="assets/sections/03-agency-title/02-2d505dd9f9243c668e48.jpg"
                alt="Пара танцует на сцене у красного бархатного занавеса, кадр в рамке киноплёнки" loading="lazy" width="1024" height="768">
           <img class="wordmark__heart" src="assets/sections/03-agency-title/01-Red-Velvet-Heart-PNG.png"
                alt="" loading="lazy" width="512" height="512">
-        </div>
+        </figure>
 
         <p class="wordmark__lead">Организуем истории, которые хочется пересматривать</p>
       </div>
@@ -281,10 +286,10 @@
       <div class="footer__contacts">
         <a href="tel:+79194459601">Телефон: +7 (919) 445 96 01</a>
         <a href="mailto:stas.toropov2015@yandex.ru">Email: stas.toropov2015@yandex.ru</a>
-        <a href="https://t.me/stastoropov" target="_blank" rel="noopener">Telegram</a>
+        <a href="https://t.me/stastoropov" target="_blank" rel="noopener">Телеграм</a>
       </div>
 
-      <p class="footer__legal">Суд признал экстремистской и запретил в России деятельность корпорации Meta по реализации социальных сетей</p>
+      <p class="footer__legal">* Суд признал экстремистской и запретил в России деятельность корпорации Meta по реализации социальных сетей</p>
 
       <div class="footer__credits">
         <p>Торопова Светлана Геннадьевна</p>
@@ -300,9 +305,9 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="js/vendor/gsap.min.js"></script>
+  <script src="js/vendor/ScrollTrigger.min.js"></script>
+  <script src="js/vendor/lenis.min.js"></script>
   <script src="js/main.js"></script>
   <script src="js/motion.js"></script>
   <script src="js/gallery.js"></script>

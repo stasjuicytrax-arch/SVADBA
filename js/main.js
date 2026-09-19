@@ -38,14 +38,21 @@
   /* Мобильное меню-«занавес» */
   var burger = document.getElementById('navBurger');
   var curtain = document.getElementById('navCurtain');
+  var FOCUSABLE = 'a[href], button:not([disabled])';
 
   function setMenu(open) {
     burger.setAttribute('aria-expanded', String(open));
     burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
     curtain.hidden = !open;
-    document.body.style.overflow = open ? 'hidden' : '';
+    document.body.classList.toggle('is-locked', open);
+
+    if (lenis) {
+      if (open) lenis.stop();
+      else lenis.start();
+    }
+
     if (open) {
-      var first = curtain.querySelector('a');
+      var first = curtain.querySelector(FOCUSABLE);
       if (first) first.focus();
     }
   }
@@ -55,9 +62,29 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && !curtain.hidden) {
+    if (curtain.hidden) return;
+
+    if (e.key === 'Escape') {
       setMenu(false);
       burger.focus();
+      return;
+    }
+
+    /* Пока занавес открыт, Tab не должен уводить на ссылки под ним */
+    if (e.key !== 'Tab') return;
+
+    var items = Array.prototype.slice.call(curtain.querySelectorAll(FOCUSABLE));
+    if (!items.length) return;
+
+    var first = items[0];
+    var last = items[items.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
     }
   });
 
@@ -66,14 +93,26 @@
     var link = e.target.closest && e.target.closest('a[href^="#"]');
     if (!link) return;
 
+    /* Кнопки попапа и загрузки обрабатывает forms.js */
+    if (link.hasAttribute('data-popup') || link.hasAttribute('data-download')) return;
+
     var href = link.getAttribute('href');
-    if (href.length < 2) return;
+
+    /* Пустая ссылка не должна отбрасывать страницу наверх */
+    if (href.length < 2) {
+      e.preventDefault();
+      return;
+    }
 
     var target = document.querySelector(href);
     if (!target) return;
 
     e.preventDefault();
-    if (!curtain.hidden) setMenu(false);
+
+    if (!curtain.hidden) {
+      setMenu(false);
+      burger.focus();
+    }
 
     if (lenis) lenis.scrollTo(target, { offset: -80 });
     else target.scrollIntoView({ block: 'start' });

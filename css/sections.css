@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Блоки 00–04 свёрстаны. Блоки 05–15 — каркас, композиция на след. этапах.
+   Блоки 00–04 свёрстаны. Блоки 05–15 — низкий каркас, вёрстка на след. этапах.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -21,11 +21,7 @@
   position: relative;
   flex: 1;
   height: 12px;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--line-dark) 0 1px,
-    transparent 1px 100%
-  );
+  background-image: repeating-linear-gradient(to right, var(--line-dark) 0 1px, transparent 1px 100%);
   background-size: 14px 6px;
   background-repeat: repeat-x;
   background-position: 0 100%;
@@ -41,26 +37,38 @@
   background: var(--red);
 }
 
+/* Над светлыми «экранами» — тёмные цвета: светлые давали 2.4:1 */
+.timecode--on-light .timecode__ruler {
+  background-image: repeating-linear-gradient(to right, rgba(62, 2, 4, .45) 0 1px, transparent 1px 100%);
+  border-bottom-color: rgba(62, 2, 4, .45);
+}
+
+.timecode--on-light .timecode__value {
+  color: var(--rose-ink);
+}
+
 .timecode__value {
+  margin-left: auto;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: .12em;
   color: var(--rose-soft);
   font-variant-numeric: tabular-nums;
+  transition: color var(--dur-micro) var(--ease-default);
 }
 
 /* --------------------------------------------------------------------------
-   00. Навигация — плавающая liquid-glass пилюля
+   00. Навигация
    -------------------------------------------------------------------------- */
 .nav {
   position: fixed;
-  top: calc(28px + var(--frame));
+  top: calc(26px + var(--frame));
   inset-inline: 0;
   z-index: 95;
   display: flex;
   justify-content: center;
   padding-inline: var(--frame);
-  transition: transform var(--dur-in) var(--ease-default), opacity 300ms var(--ease-default);
+  transition: transform 320ms var(--ease-default), opacity 220ms var(--ease-default);
 }
 
 .nav--hidden {
@@ -68,28 +76,25 @@
   opacity: 0;
 }
 
+/* Одно и то же тёмное стекло над фото и над светлыми «экранами» */
 .nav__pill {
   display: flex;
   align-items: center;
   gap: clamp(12px, 2vw, 28px);
   padding: 8px 8px 8px 20px;
   border-radius: var(--radius-pill);
-  /* Тёмная база под стеклом: пилюля проходит и над фото, и над светлыми «экранами» */
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, .16), rgba(255, 255, 255, .04)),
-    rgba(11, 3, 2, .62);
-  backdrop-filter: blur(18px) saturate(170%);
-  -webkit-backdrop-filter: blur(18px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, .22);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .34),
-    0 14px 34px -14px rgba(11, 3, 2, .8);
+  background: rgba(27, 1, 0, .55);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, .18);
   color: var(--paper);
   max-width: 100%;
 }
 
 .nav__logo {
-  display: block;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   flex-shrink: 0;
 }
 
@@ -105,9 +110,11 @@
 
 .nav__menu a {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: .1em;
+  letter-spacing: .12em;
+  color: var(--paper);
   padding: 6px 2px;
   position: relative;
   white-space: nowrap;
@@ -140,10 +147,11 @@
 .nav__icon {
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: 1px solid var(--line-dark);
+  border: 1px solid rgba(255, 255, 255, .18);
+  color: var(--paper);
   transition: background var(--dur-micro) var(--ease-default), border-color var(--dur-micro) var(--ease-default);
 }
 
@@ -166,23 +174,29 @@
   border-color: rgba(255, 255, 255, .35);
 }
 
-/* --red-brand вместо --red: --paper на нём даёт 4.97:1 при мелком кегле */
+/* --red-brand, а не --red: на нём --paper даёт 4.97:1 при кегле 14px */
 .nav__cta {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  height: 36px;
-  padding-inline: 18px;
+  height: 40px;
+  padding: 0 18px;
   border-radius: var(--radius-pill);
   background: var(--red-brand);
   color: var(--paper);
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
   white-space: nowrap;
   transition: background var(--dur-micro) var(--ease-default);
 }
 
-/* Ховер уходит в тёмный, а не в --red: так контраст растёт (5.86:1), а не падает до 4.1:1 */
+.nav__cta::before {
+  content: "";
+  position: absolute;
+  inset: -2px 0;
+}
+
 .nav__cta:hover,
 .nav__cta:focus-visible {
   background: #B71F11;
@@ -190,10 +204,11 @@
 
 .nav__burger {
   display: none;
-  width: 40px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-pill);
   place-items: center;
+  align-content: center;
   gap: 5px;
 }
 
@@ -202,16 +217,11 @@
   width: 18px;
   height: 1.5px;
   background: var(--paper);
-  transition: transform var(--dur-micro) var(--ease-default), opacity var(--dur-micro) var(--ease-default);
+  transition: transform var(--dur-micro) var(--ease-default);
 }
 
-.nav__burger[aria-expanded="true"] span:first-child {
-  transform: translateY(3.25px) rotate(45deg);
-}
-
-.nav__burger[aria-expanded="true"] span:last-child {
-  transform: translateY(-3.25px) rotate(-45deg);
-}
+.nav__burger[aria-expanded="true"] span:first-child { transform: translateY(3.25px) rotate(45deg); }
+.nav__burger[aria-expanded="true"] span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
 
 /* Мобильное меню — тёмный «занавес» */
 .curtain {
@@ -226,9 +236,7 @@
   overflow-y: auto;
 }
 
-.curtain[hidden] {
-  display: none;
-}
+.curtain[hidden] { display: none; }
 
 .curtain__menu a {
   display: block;
@@ -242,14 +250,12 @@
 }
 
 .curtain__menu a:hover,
-.curtain__menu a:focus-visible {
-  color: var(--rose-soft);
-}
+.curtain__menu a:focus-visible { color: var(--rose-soft); }
 
 .curtain__links {
   margin-top: 2.5rem;
   display: grid;
-  gap: .75rem;
+  gap: 0;
   font-family: var(--font-mono);
   font-size: var(--fs-meta);
   text-transform: uppercase;
@@ -257,8 +263,15 @@
   color: var(--rose-soft);
 }
 
+.curtain__links a,
+.curtain__social a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
 .curtain__social {
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: flex;
   gap: 1.5rem;
   font-family: var(--font-mono);
@@ -269,20 +282,17 @@
 }
 
 /* --------------------------------------------------------------------------
-   01. Hero — «экран» с занавесом
+   01. Hero — ровно 100svh вместе с полями
    -------------------------------------------------------------------------- */
 .hero {
+  height: 100svh;
   padding: var(--frame);
-  padding-top: calc(28px + var(--frame));
+  padding-top: calc(26px + var(--frame));
 }
 
 .hero__screen {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 100svh;
-  padding: clamp(96px, 15vh, 168px) clamp(20px, 4vw, 56px) clamp(24px, 4vh, 48px);
+  height: 100%;
   border-radius: var(--radius-screen);
   overflow: hidden;
   background: var(--night);
@@ -294,61 +304,81 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.08);
+  object-position: center;
 }
 
-/* Затемнение под текст — DESIGN.md §8 запрещает текст поверх фото без него */
+/* Затемнение сверху и снизу — под логотип и карточки */
 .hero__veil {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(11, 3, 2, .62) 0%, rgba(11, 3, 2, .1) 30%, rgba(11, 3, 2, .22) 58%, rgba(11, 3, 2, .8) 100%);
+    radial-gradient(60% 42% at 50% 46%, rgba(27, 1, 0, .42), transparent 72%),
+    linear-gradient(180deg, rgba(27, 1, 0, .6) 0%, rgba(27, 1, 0, .1) 26%, rgba(27, 1, 0, .12) 58%, rgba(27, 1, 0, .6) 100%);
 }
 
-.hero__content,
-.hero__cards {
-  position: relative;
-  z-index: 2;
+.hero__center {
+  margin: 0;
+  line-height: normal;
+  letter-spacing: normal;
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 24px;
+  padding-inline: var(--gutter);
+  text-align: center;
+}
+
+/* Лозунг внутри h1 — для скринридеров и поиска; визуально на экране его несут ленты */
+.hero__slogan {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .hero__eyebrow {
+  display: block;
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: var(--fs-meta);
+  font-size: 13px;
   text-transform: uppercase;
-  letter-spacing: .22em;
+  letter-spacing: .2em;
   color: var(--paper);
 }
 
 .hero__logo {
   display: block;
-  width: clamp(240px, 62vw, 620px);
+  width: clamp(280px, 38vw, 640px);
+  max-width: 100%;
   height: auto;
-  margin-top: clamp(24px, 6vh, 64px);
 }
 
 .hero__cards {
+  position: absolute;
+  left: 32px;
+  bottom: 32px;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
-  gap: clamp(10px, 1.2vw, 16px);
-  max-width: 620px;
+  gap: 12px;
+  max-width: min(520px, calc(100% - 64px));
 }
 
-/* Тёмное стекло: белое стекло поверх ярко-красного занавеса съело бы белый текст */
+/* Тёмное стекло: белое поверх ярко-красного занавеса съедало бы белый текст */
 .hero__card {
   flex: 1 1 200px;
-  max-width: 280px;
+  max-width: 250px;
   margin: 0;
   padding: 14px 18px;
   border-radius: var(--radius-card);
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .03)),
-    rgba(11, 3, 2, .5);
+  background: rgba(27, 1, 0, .5);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, .24);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, .38),
-    0 12px 32px -12px rgba(11, 3, 2, .6);
+  border: 1px solid rgba(255, 255, 255, .2);
   color: var(--paper);
   font-size: .9375rem;
   line-height: 1.4;
@@ -356,12 +386,13 @@
 
 .hero__scroll {
   position: absolute;
-  right: clamp(20px, 4vw, 56px);
-  bottom: clamp(24px, 4vh, 48px);
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 32px;
   z-index: 2;
   display: block;
   width: 12px;
-  height: 64px;
+  height: 56px;
 }
 
 .hero__scroll svg {
@@ -373,26 +404,47 @@
 }
 
 .hero__scroll line {
-  stroke-dasharray: 18 40;
+  stroke-dasharray: 16 34;
   animation: flow 2.6s linear infinite;
 }
 
 @keyframes flow {
-  from { stroke-dashoffset: 58; }
+  from { stroke-dashoffset: 50; }
   to { stroke-dashoffset: 0; }
 }
 
 /* --------------------------------------------------------------------------
-   02. Бегущая строка
+   02. Две ленты крест-накрест
    -------------------------------------------------------------------------- */
-.marquee {
-  margin-block: clamp(48px, 8vh, 110px);
-  width: 106%;
-  margin-inline: -3%;
-  padding-block: clamp(14px, 2vw, 24px);
-  background: var(--red-brand);
+.marquees {
+  position: relative;
+  margin-top: 24px;
+  padding-block: 40px;
+  /* --glow-edge горит у нижнего края (50% 110%) и обрывался линией на границе секции;
+     здесь центр свечения между лентами, к краям оно гаснет в --night */
+  background-image: radial-gradient(60% 55% at 50% 55%, rgba(202, 38, 21, .32), transparent 72%);
   overflow: hidden;
+}
+
+.marquee {
+  width: 114%;
+  margin-inline: -7%;
+  padding-block: clamp(12px, 1.6vw, 20px);
+  overflow: hidden;
+}
+
+.marquee--red {
+  background: var(--red-brand);
+  transform: rotate(2deg);
+}
+
+/* При ±2° ленты сходятся на 0.07px на пиксель ширины: с отрицательным отступом
+   верхняя срезала буквы нижней на пол-экрана. Разнос центров ~146px сводит их
+   клином к правому краю, а пересечение уходит за экран */
+.marquee--wine {
+  background: var(--wine);
   transform: rotate(-2deg);
+  margin-top: clamp(12px, 3.75vw, 54px);
 }
 
 .marquee__track {
@@ -403,50 +455,50 @@
   will-change: transform;
 }
 
-/* 700 + от 20px: «//» цветом --night держит 3.62:1, а это порог крупного текста (3:1) */
+/* 700 и от 20px — «//» держит 3.62:1, а это порог крупного текста (3:1) */
 .marquee__item {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(1.25rem, 2.6vw, 2.1rem);
   text-transform: uppercase;
   letter-spacing: -0.03em;
-  color: var(--paper);
 }
 
-.marquee__item i {
-  font-style: normal;
-  color: var(--night);
-}
+.marquee--red .marquee__item { color: var(--paper); }
+.marquee--red .marquee__item i { color: var(--night); }
+
+.marquee--wine .marquee__item { color: var(--rose-soft); }
+/* --paper, а не --red-brand: на --wine это 16:1 против 3.24:1 */
+.marquee--wine .marquee__item i { color: var(--paper); }
+
+.marquee__item i { font-style: normal; }
 
 /* --------------------------------------------------------------------------
-   03 / 14. Фото-лента
+   03. Фото-лента — одна строка, кадры одной пропорции
    -------------------------------------------------------------------------- */
 .strip {
-  display: grid;
-  gap: clamp(12px, 1.4vw, 20px);
-  padding-block: clamp(40px, 7vh, 90px);
+  padding-block: clamp(48px, 7vh, 80px);
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
 }
 
 .strip__row {
   display: flex;
   align-items: flex-start;
-  gap: clamp(12px, 1.4vw, 20px);
+  gap: 16px;
   width: max-content;
   will-change: transform;
 }
 
 .strip__frame {
   flex-shrink: 0;
-  width: clamp(148px, 20vw, 260px);
-  aspect-ratio: 3 / 4;
+  width: clamp(180px, 22vw, 280px);
+  aspect-ratio: 4 / 5;
   margin: 0;
   border-radius: 20px;
   overflow: hidden;
 }
-
-.strip__frame--tall { aspect-ratio: 2 / 3; }
-.strip__frame--short { aspect-ratio: 4 / 5; }
 
 .strip__frame img {
   width: 100%;
@@ -458,89 +510,64 @@
    04. Свадебное агентство «В титрах»
    -------------------------------------------------------------------------- */
 .wordmark {
-  padding-block: clamp(72px, 11vh, 140px) clamp(48px, 8vh, 110px);
+  padding-block: 120px;
   overflow: hidden;
 }
 
-.wordmark__eyebrow {
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 2vw, 24px);
-  margin-bottom: clamp(32px, 6vh, 72px);
-  font-family: var(--font-mono);
-  font-size: var(--fs-meta);
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--rose-ink);
-}
-
-.wordmark__eyebrow i {
-  flex: 1;
-  height: 1px;
-  background: var(--line-light);
-}
-
-.wordmark__title {
+/* --rose-ink вместо --rose-mute: на светлом «экране» 4.85:1 против 2.52:1 */
+.wordmark__kicker {
   margin: 0;
   text-align: center;
-}
-
-.wordmark__small {
-  display: block;
-  font-size: clamp(1rem, 2.4vw, 1.9rem);
-  letter-spacing: .02em;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .2em;
   color: var(--rose-ink);
-  margin-bottom: clamp(6px, 1.4vh, 18px);
 }
 
 .wordmark__big {
-  display: block;
-  font-size: clamp(2.8rem, 18.5vw, 16rem);
-  line-height: .82;
+  margin: clamp(16px, 2.5vh, 28px) 0 0;
+  text-align: center;
+  font-size: clamp(2.2rem, 14vw, 13rem);
+  line-height: .86;
   letter-spacing: -0.05em;
   color: var(--maroon);
 }
 
-.wordmark__big em {
-  font-style: normal;
-  color: var(--red);
-}
-
 .wordmark__stage {
   position: relative;
-  display: flex;
-  justify-content: center;
-  margin-top: clamp(-28px, -3.5vw, -12px);
+  width: min(720px, 100%);
+  margin: 48px auto 0;
 }
 
 .wordmark__photo {
-  position: relative;
-  z-index: 2;
-  width: clamp(260px, 48%, 620px);
+  display: block;
+  width: 100%;
   height: auto;
   border-radius: var(--radius-photo);
+  transform: rotate(-2deg);
+  box-shadow: 0 30px 50px -28px rgba(26, 5, 3, .55);
 }
 
 .wordmark__heart {
   position: absolute;
-  z-index: 3;
-  top: -6%;
-  right: clamp(2%, 6vw, 12%);
-  width: clamp(52px, 7vw, 104px);
+  right: -18px;
+  bottom: -14px;
+  width: 64px;
   height: auto;
   animation: float 7s ease-in-out infinite;
 }
 
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(-4deg); }
-  50% { transform: translateY(-14px) rotate(3deg); }
+  50% { transform: translateY(-12px) rotate(3deg); }
 }
 
 .wordmark__lead {
-  margin: clamp(32px, 5vh, 56px) auto 0;
+  margin: 32px auto 0;
   max-width: 34ch;
   text-align: center;
-  font-size: var(--fs-h3);
+  font-size: clamp(1.25rem, 1.8vw, 1.5rem);
   line-height: 1.35;
   color: var(--ink);
 }
@@ -598,21 +625,17 @@
 
 .section--reviews { background: var(--wine); }
 
-.section--photo-strip {
-  overflow: hidden;
-  padding-block: 2rem;
-}
+.section--photo-strip { overflow: hidden; }
 
 .photo-strip__track {
   display: flex;
   gap: 1rem;
-  min-height: 240px;
 }
 
 /* Футер */
 .site-footer {
   background: var(--night-deep);
-  padding-block: var(--section-gap);
+  padding-block: 80px;
 }
 
 .footer__cta {
@@ -664,63 +687,45 @@
    -------------------------------------------------------------------------- */
 @media (max-width: 899px) {
   .nav__menu,
-  .nav__side {
-    display: none;
-  }
+  .nav__side { display: none; }
 
-  .nav__burger {
-    display: grid;
-  }
+  .nav__burger { display: grid; }
+
+  .nav__cta { margin-left: auto; }
 
   .nav__pill {
     width: 100%;
-    justify-content: space-between;
-    padding-right: 10px;
+    gap: 8px;
+    padding: 6px 6px 6px 16px;
   }
 
-  .strip__row--second {
-    display: none;
+  .timecode__ruler { display: none; }
+
+  .hero__cards {
+    right: 32px;
+    max-width: none;
   }
 
-  .timecode__ruler {
-    display: none;
+  .hero__scroll { display: none; }
+
+  .wordmark { padding-block: 80px; }
+
+  .wordmark__heart {
+    right: -8px;
+    bottom: -10px;
+    width: 52px;
   }
 }
 
 @media (min-width: 900px) {
-  .curtain {
-    display: none;
-  }
-
-  .hero__content {
-    align-self: flex-end;
-    text-align: right;
-  }
-
-  .hero__logo {
-    margin-left: auto;
-  }
-
-  .portfolio__grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+  .curtain { display: none; }
 }
 
 /* Интро-«шторка»: пока идёт, страница не скроллится */
-body.is-intro {
-  overflow: hidden;
-}
+body.is-intro { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
-  body.is-intro {
-    overflow: visible;
-  }
-
-  .hero__scroll line {
-    animation: none;
-  }
-
-  .wordmark__heart {
-    animation: none;
-  }
+  body.is-intro { overflow: visible; }
+  .hero__scroll line { animation: none; }
+  .wordmark__heart { animation: none; }
 }

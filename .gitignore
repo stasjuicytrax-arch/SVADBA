@@ -5,3 +5,6 @@ dist
 
 # служебный кэш impeccable (локальное состояние сессии)
 .impeccable/hook.cache.json
+
+# скриншоты и логи визуальной проверки Playwright
+.playwright-mcp/
