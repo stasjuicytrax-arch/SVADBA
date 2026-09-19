@@ -177,54 +177,194 @@
     </section>
 
     <!-- 05. О нас — Особый фильм -->
-    <section id="about" class="section section--screen panel-cut section--about">
+    <section id="about" class="section section--screen panel-cut film">
       <div class="container">
-        <h2 class="section__title">
-          <span>ДЛЯ НАС КАЖДАЯ ПАРА —</span>
-          <span>ЭТО СОВЕРШЕННО</span>
-          <span>ОСОБЫЙ ФИЛЬМ</span>
-        </h2>
-        <p class="section__text">У каждой пары свой сценарий - своя любовь, мы берём на себя всю техническую магию по созданию вашего фильма: локации, свет, звук, монтаж.</p>
+        <div class="film__head">
+          <svg class="asterisk" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg>
+          <h2 class="film__title">
+            <span class="film__line">Для нас каждая пара —</span>
+            <span class="film__line film__line--mute">это совершенно</span>
+            <span class="film__line film__line--shift">особый <span class="film__pill"><img src="assets/sections/04-about-osobyi-film/03-9a12435b3e3eddc07090.jpg" alt="" loading="lazy" width="1024" height="1024"></span> фильм</span>
+          </h2>
+        </div>
+
+        <div class="film__body">
+          <figure class="film__photo">
+            <img src="assets/sections/04-about-osobyi-film/03-9a12435b3e3eddc07090.jpg"
+                 alt="Чёрно-белый портрет жениха и невесты в рамке киноплёнки" loading="lazy" width="1024" height="1024">
+          </figure>
+          <div class="film__text">
+            <img class="film__clapper" src="assets/sections/04-about-osobyi-film/02-_1.svg" alt="" width="196" height="231" loading="lazy">
+            <p>У каждой пары свой сценарий - своя любовь, мы берём на себя всю техническую магию по созданию вашего фильма: локации, свет, звук, монтаж.</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- 06. Мы не ходим в кадре -->
-    <section id="behind-the-scenes" class="section section--behind">
+    <section id="behind-the-scenes" class="section backstage">
       <div class="container">
-        <h2 class="section__title">МЫ НЕ ХОДИМ В КАДРЕ</h2>
-        <p class="section__text">Мы контролируем площадку, помогаем невесте, проверяем звук микрофона и шепотом просим расступиться, когда идёт невеста. Наши имена появятся в конце, но работать начинаем за 6 месяцев до премьеры</p>
-        <p class="section__quote">Создадим фильм, в котором оживет именно ваша история любви</p>
+        <h2 class="backstage__title">Мы не х<span class="backstage__strike">о</span>дим в кадре</h2>
+
+        <div class="backstage__grid">
+          <p class="backstage__text">Мы контролируем площадку, помогаем невесте, проверяем звук микрофона и шепотом просим расступиться, когда идёт невеста. Наши имена появятся в конце, но работать начинаем за 6 месяцев до премьеры</p>
+
+          <div class="fan">
+            <figure class="fan__card fan__card--left"><img src="assets/sections/05-behind-the-scenes/02-1230876b743acedfc33b.jpg" alt="Свадебное платье, расшитое стразами" loading="lazy" width="768" height="1024"></figure>
+            <figure class="fan__card fan__card--right"><img src="assets/sections/05-behind-the-scenes/03-fe88687e2a3f124b8d51.png" alt="Две девушки на свадьбе" loading="lazy" width="1086" height="1448"></figure>
+            <figure class="fan__card fan__card--center"><img src="assets/sections/05-behind-the-scenes/04-0c11e202b7398e684289.jpg" alt="Ведущая с микрофоном на свадьбе" loading="lazy" width="768" height="1024"></figure>
+          </div>
+        </div>
+
+        <ul class="stats">
+          <li class="stats__item"><span class="stats__num">6</span><span class="stats__label">месяцев до премьеры</span></li>
+          <li class="stats__item"><span class="stats__num">1</span><span class="stats__label">команда за кадром</span></li>
+          <li class="stats__item"><span class="stats__num">0</span><span class="stats__label">шаблонов</span></li>
+        </ul>
+
+        <p class="backstage__quote">Создадим фильм, в котором оживет именно ваша история любви</p>
       </div>
     </section>
 
-    <!-- 07. Форма заявки №1 -->
-    <section id="form-1" class="section section--screen panel-cut section--form">
+    <!-- 07. Форма заявки №1 — «билет» -->
+    <section id="form-1" class="section section--screen panel-cut request">
       <div class="container">
-        <h2 class="section__title">Оставьте заявку</h2>
-        <p class="section__lead">и мы начнём подготовку к вашей премьере</p>
-        <form class="ticket-form">
-          <label>В главных ролях
-            <input type="text" name="names" required>
-          </label>
-          <label>Дата премьеры
-            <input type="text" name="date" required>
-          </label>
-          <label>Локация съёмки
-            <input type="text" name="location" required>
-          </label>
-          <label>Ваши контакты
-            <input type="text" name="contact" required>
-          </label>
-          <button type="submit" class="button">Отправить</button>
-        </form>
+        <div class="ticket">
+          <div class="ticket__stub">
+            <h2 class="ticket__title">Оставьте заявку</h2>
+            <p class="ticket__lead">и мы начнём подготовку к вашей премьере</p>
+          </div>
+
+          <!-- Бэкенда пока нет (docs/LEGAL.md §2.3): обработчик на российском хостинге подключится через action -->
+          <form class="ticket__form" id="ticketForm" action="send.php" method="post" novalidate>
+            <input type="hidden" name="consent_version" value="soglasie-v1-2026-09">
+            <input type="hidden" name="page" value="">
+            <input type="hidden" name="sent_at" value="">
+
+          <div class="ticket__field">
+            <label class="ticket__label" for="f-names">В главных ролях</label>
+            <input class="ticket__input" id="f-names" name="names" type="text" placeholder="Имя главных героев" autocomplete="name" required aria-describedby="e-names">
+            <p class="ticket__error" id="e-names" hidden></p>
+          </div>
+          <div class="ticket__field">
+            <label class="ticket__label" for="f-date">Дата премьеры</label>
+            <input class="ticket__input" id="f-date" name="date" type="date" required aria-describedby="e-date">
+            <p class="ticket__error" id="e-date" hidden></p>
+          </div>
+          <div class="ticket__field">
+            <label class="ticket__label" for="f-place">Локация</label>
+            <input class="ticket__input" id="f-place" name="place" type="text" placeholder="Локация съёмки" required aria-describedby="e-place">
+            <p class="ticket__error" id="e-place" hidden></p>
+          </div>
+          <div class="ticket__field">
+            <label class="ticket__label" for="f-contact">Связь</label>
+            <input class="ticket__input" id="f-contact" name="contact" type="text" placeholder="Ваши контакты" autocomplete="tel" required aria-describedby="e-contact">
+            <p class="ticket__error" id="e-contact" hidden></p>
+          </div>
+
+            <label class="consent">
+              <input class="consent__box" type="checkbox" name="consent" id="f-consent" required>
+              <span>Я даю <a href="soglasie.html" target="_blank" rel="noopener">согласие на обработку персональных данных</a> и ознакомлен(а) с <a href="politika.html" target="_blank" rel="noopener">политикой конфиденциальности</a></span>
+            </label>
+            <p class="consent__hint" id="consentHint">Отметьте согласие, чтобы отправить заявку</p>
+
+            <button type="submit" class="cta cta--lg ticket__submit" disabled aria-describedby="consentHint"><span class="cta__label">Отправить</span><span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></button>
+          </form>
+
+          <div class="ticket__done" id="ticketDone" role="status" hidden>
+            <svg class="asterisk" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3v26M4.7 9.5l22.6 13M4.7 22.5l22.6-13"/></svg>
+            <p class="ticket__done-text">Премьера назначена</p>
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- 08. Портфолио -->
-    <section id="portfolio" class="section section--screen panel-cut section--portfolio">
+    <section id="portfolio" class="section section--screen panel-cut works">
       <div class="container">
-        <h2 class="section__title">Портфолио</h2>
-        <div class="portfolio__grid"></div>
+        <h2 class="works__title">Портфолио</h2>
+        <ul class="works__grid">
+        <li class="works__item" style="--r: 0.750">
+          <a class="work" href="#nadezdadamir">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-01-damir-nadezhda.jpg" width="768" height="1024" alt="Дамир и Надежда, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 001</span>
+            <span class="work__names">ДАМИР И НАДЕЖДА</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 0.806">
+          <a class="work" href="#romandaria">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-02-roman-daria.jpg" width="1680" height="2085" alt="Роман и Дарья, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 002</span>
+            <span class="work__names">РОМАН И ДАРЬЯ</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 0.747">
+          <a class="work" href="#kseniasergey">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-03-sergey-ksenia.jpg" width="1680" height="2250" alt="Сергей и Ксения, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 003</span>
+            <span class="work__names">СЕРГЕЙ И КСЕНИЯ</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 0.747">
+          <a class="work" href="#evgiyalena">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-04-evgeny-alena.jpg" width="1680" height="2250" alt="Евгений и Алена, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 004</span>
+            <span class="work__names">ЕВГЕНИЙ И АЛЕНА</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 1.242">
+          <a class="work" href="#aleksandrasergey">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-05-sergey-aleksandra.jpg" width="1680" height="1353" alt="Сергей и Александра, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 005</span>
+            <span class="work__names">СЕРГЕЙ И АЛЕКСАНДРА</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 1.242">
+          <a class="work" href="#alekseyanna">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-06-aleksey-anna.jpg" width="1680" height="1353" alt="Алексей и Анна, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 006</span>
+            <span class="work__names">АЛЕКСЕЙ И АННА</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 1.242">
+          <a class="work" href="#antonyulia">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-07-anton-yulia.jpg" width="1680" height="1353" alt="Антон и Юля, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 007</span>
+            <span class="work__names">АНТОН И ЮЛЯ</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 0.806">
+          <a class="work" href="#dmitruyekaterina">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-08-dmitry-ekaterina.jpg" width="1680" height="2085" alt="Дмитрий и Екатерина, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 008</span>
+            <span class="work__names">ДМИТРИЙ И ЕКАТЕРИНА</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 1.340">
+          <a class="work" href="#pavelksenia">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-09-pavel-ksenia.jpg" width="1680" height="1254" alt="Павел и Ксения, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 009</span>
+            <span class="work__names">ПАВЕЛ И КСЕНИЯ</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        <li class="works__item" style="--r: 0.806">
+          <a class="work" href="#sergeymaria">
+            <img class="work__img" src="assets/sections/07-portfolio/cover-10-sergey-maria.jpg" width="1680" height="2085" alt="Сергей и Мария, свадебная съёмка" loading="lazy">
+            <span class="work__tag">КАДР 010</span>
+            <span class="work__names">СЕРГЕЙ И МАРИЯ</span>
+            <span class="work__more">Смотреть все фото <span class="cta__arrow" aria-hidden="true"><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg><svg viewBox="0 0 12 12" focusable="false"><path d="M3 9 9 3M4.5 3H9v4.5"/></svg></span></span>
+          </a>
+        </li>
+        </ul>
       </div>
     </section>
 

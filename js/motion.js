@@ -223,6 +223,35 @@
         clipPath: 'inset(0% 0% 0% 0%)', duration: 1.1, ease: 'power4.out'
       });
 
+    /* 05: строки заголовка поднимаются по очереди */
+    gsap.from('.film__line', {
+      scrollTrigger: { trigger: '.film', start: 'top 72%' },
+      y: 48, opacity: 0, duration: .9, stagger: .08, ease: 'power4.out'
+    });
+
+    /* Фото-пилюля: медленный зум внутри при скролле (DESIGN.md §3) */
+    gsap.fromTo('.film__pill img', { scale: 1.4 }, {
+      scale: 1.05, ease: 'none',
+      scrollTrigger: { trigger: '.film', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    gsap.fromTo('.film__photo img', { scale: 1.12 }, {
+      scale: 1, ease: 'none',
+      scrollTrigger: { trigger: '.film__photo', start: 'top bottom', end: 'bottom 40%', scrub: true }
+    });
+
+    /* Хлопушка «хлопает» один раз при появлении */
+    gsap.fromTo('.film__clapper', { rotation: -16 }, {
+      rotation: 0, duration: .24, delay: .25, ease: 'power4.in',
+      scrollTrigger: { trigger: '.film__text', start: 'top 85%', once: true }
+    });
+
+    /* 06: веер раскрывается от скролла — из стопки в стороны */
+    var fanScroll = { trigger: '.fan', start: 'top 85%', end: 'center 50%', scrub: true };
+    gsap.from('.fan__card--left', { x: 0, rotation: 0, ease: 'none', scrollTrigger: fanScroll });
+    gsap.from('.fan__card--right', { x: 0, rotation: 0, ease: 'none', scrollTrigger: fanScroll });
+    gsap.from('.fan__card--center', { y: 0, ease: 'none', scrollTrigger: fanScroll });
+
     /* Лёгкий параллакс занавеса */
     gsap.to('.hero__bg', {
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
