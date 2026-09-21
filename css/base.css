@@ -56,6 +56,19 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+
+  /* Текст сайта нельзя выделить мышью, см. js/noselect.js */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* Поля формы — исключение, иначе в них нельзя печатать и править */
+input,
+textarea,
+select {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 h1,

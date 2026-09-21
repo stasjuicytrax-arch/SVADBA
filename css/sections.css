@@ -779,22 +779,6 @@
 }
 
 /* «О» в «ХОДИМ» перечёркнута красным, как на старом сайте */
-.backstage__strike {
-  position: relative;
-  display: inline-block;
-}
-
-.backstage__strike::after {
-  content: "";
-  position: absolute;
-  left: -8%;
-  right: -8%;
-  top: 50%;
-  height: .09em;
-  background: var(--red);
-  transform: rotate(-24deg);
-}
-
 .backstage__grid {
   display: grid;
   gap: clamp(48px, 6vw, 96px);
@@ -1826,6 +1810,10 @@
   padding: clamp(24px, 3vw, 44px);
 }
 
+/* Без кнопки на светлой карточке оставался пустой верх: текст прижимался
+   к низу, как на афише-фото. Здесь фона нет, поэтому ставим по центру */
+.plan--day .plan__body { align-content: center; }
+
 .plan__name {
   margin: 0;
   font-size: clamp(1.5rem, 3vw, 2.6rem);
@@ -1864,52 +1852,6 @@
   -webkit-backdrop-filter: blur(18px) saturate(170%);
   border: 1px solid rgba(255, 255, 255, .28);
 }
-
-.plan .cta { justify-self: start; }
-
-/* На светлой афише кнопка тёмная: --paper на --maroon даёт 14.9:1 */
-.cta--ink { background: var(--maroon); }
-.cta--ink::before { background: var(--ink); }
-
-.price__more {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  margin-top: clamp(20px, 2.5vw, 32px);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: .14em;
-  color: var(--rose-soft);
-}
-
-.price__more span { border-bottom: 1px solid currentColor; }
-
-.price__more:hover,
-.price__more:focus-visible { color: var(--paper); }
-
-.price__more .cta__arrow {
-  width: 12px;
-  height: 12px;
-  position: relative;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.price__more .cta__arrow svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.price__more .cta__arrow svg:last-child { transform: translate(-100%, 100%); }
 
 /* --------------------------------------------------------------------------
    13. Вопросы — липкий заголовок слева, аккордеон справа
@@ -2316,7 +2258,6 @@
   color: var(--rose-soft);
 }
 
-.footer__legal,
 .footer__copy {
   margin: 0;
   max-width: 60ch;
