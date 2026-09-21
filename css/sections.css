@@ -283,6 +283,20 @@
   object-position: center;
 }
 
+/* На узком экране от кадра остаётся центральная треть, а пара стоит левее
+   середины — сдвигаем окно кадрирования к ней */
+@media (max-width: 899px) {
+  .hero__bg { object-position: 42% 50%; }
+
+  /* В узкий кадр попадают светлые пятна (платье, блик люстры) ровно под
+     логотипом и подписью — затемняем центр сильнее */
+  .hero__veil {
+    background:
+      radial-gradient(76% 30% at 50% 56%, rgba(27, 1, 0, .66), transparent 78%),
+      linear-gradient(180deg, rgba(27, 1, 0, .6) 0%, rgba(27, 1, 0, .1) 26%, rgba(27, 1, 0, .12) 58%, rgba(27, 1, 0, .6) 100%);
+  }
+}
+
 /* Затемнение сверху и снизу — под логотип и карточки */
 .hero__veil {
   position: absolute;
@@ -1797,9 +1811,77 @@
   background: linear-gradient(180deg, rgba(11, 3, 2, .15) 0%, rgba(11, 3, 2, .74) 46%, rgba(11, 3, 2, .93) 100%);
 }
 
+/* Светлая карточка собрана как афиша: кадр сверху, под ним — что делаем
+   в этот день, и цена. Так она весит столько же, сколько тёмная */
 .plan--day {
+  display: grid;
+  /* Высота кадра задана явно: с 1fr строка растягивалась под натуральную
+     высоту фото, и обе карточки вырастали до 755px */
+  grid-template-rows: clamp(150px, 16vw, 220px) auto;
   background: var(--screen);
   color: var(--ink);
+}
+
+.plan__shot {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+.plan__shot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Мягкий переход от фото к светлой части карточки */
+.plan__shot::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(240, 238, 236, 0), var(--screen));
+}
+
+.plan--day .plan__body {
+  align-content: end;
+  gap: 12px;
+  padding-top: 0;
+}
+
+.plan__list {
+  display: grid;
+  gap: 9px;
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.plan__list li {
+  display: flex;
+  gap: 9px;
+  align-items: baseline;
+}
+
+/* Звёздочка-метка ленты: --red-brand на --screen даёт 4.78:1 */
+.plan__list li::before {
+  content: "✱";
+  flex-shrink: 0;
+  font-size: 10px;
+  color: var(--red-brand);
+}
+
+.plan--day .plan__price {
+  margin-top: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-light);
 }
 
 .plan__body {
@@ -1809,10 +1891,6 @@
   width: 100%;
   padding: clamp(24px, 3vw, 44px);
 }
-
-/* Без кнопки на светлой карточке оставался пустой верх: текст прижимался
-   к низу, как на афише-фото. Здесь фона нет, поэтому ставим по центру */
-.plan--day .plan__body { align-content: center; }
 
 .plan__name {
   margin: 0;
