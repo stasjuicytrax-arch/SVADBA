@@ -38,6 +38,15 @@
         ],
         "createdAt": "2026-09-19T08:39:40.516Z",
         "reason": "user confirmed: единственный растр под малой прозрачностью — .grain (зерно ~.05 задано пользователем явно); остальные изображения страницы — фото без прозрачности"
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-09-21T19:03:03.874Z",
+        "reason": "DESIGN.md §3 задаёт для Display-заголовков line-height .92; правило 1.3 относится к тексту абзацев. Все находки — на заголовках и цифрах (.why__name, .scene__name, .backstage__quote, .stats__num, .plan__name, .ticket__done-text); текстовые абзацы держат 1.5–1.55 (.review__text, .plan__desc, .why__text). Приоритет DESIGN.md по CLAUDE.md."
       }
     ]
   }

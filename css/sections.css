@@ -1628,7 +1628,9 @@
   color: var(--rose-soft);
 }
 
-/* Тёмный текст на ярком градиенте: --paper на нём дал бы 4.1:1 при кегле 12px */
+/* Тёмный текст на ярком градиенте: --paper дал бы 4.1:1 при кегле 12px.
+   Градиент начинается с --ember-2, а не с --red: на --red было 4.38:1 —
+   чуть ниже нормы 4.5:1, теперь 5.45–6.35:1 */
 .review__ini {
   display: grid;
   place-items: center;
@@ -1636,7 +1638,7 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(140deg, var(--red), var(--ember));
+  background: linear-gradient(140deg, var(--ember-2), var(--ember));
   color: var(--night);
   font-size: 12px;
   letter-spacing: 0;
