@@ -88,6 +88,44 @@
     }
   });
 
+  /* Аккордеон вопросов: высоту анимирует GSAP, без него — мгновенное раскрытие */
+  var canAnimate = !reduced && typeof gsap !== 'undefined';
+
+  document.querySelectorAll('.faq__q').forEach(function (button) {
+    var item = button.closest('.faq__item');
+    var answer = document.getElementById(button.getAttribute('aria-controls'));
+    if (!answer) return;
+
+    button.addEventListener('click', function () {
+      var open = button.getAttribute('aria-expanded') === 'true';
+
+      button.setAttribute('aria-expanded', String(!open));
+      item.classList.toggle('is-open', !open);
+
+      if (!canAnimate) {
+        answer.classList.toggle('is-shown', !open);
+        answer.style.height = open ? '0px' : 'auto';
+        return;
+      }
+
+      /* Анимируем в пикселях: из 'auto' GSAP сначала мерит высоту,
+         и первые ~0.3 с после клика ничего не происходило */
+      if (open) {
+        gsap.set(answer, { height: answer.scrollHeight });
+        gsap.to(answer, {
+          height: 0, duration: .32, ease: 'power3.out', overwrite: true,
+          onComplete: function () { answer.classList.remove('is-shown'); }
+        });
+      } else {
+        answer.classList.add('is-shown');
+        gsap.fromTo(answer, { height: 0 }, {
+          height: answer.scrollHeight, duration: .32, ease: 'power3.out', overwrite: true,
+          onComplete: function () { answer.style.height = 'auto'; }
+        });
+      }
+    });
+  });
+
   /* Якорные ссылки — через Lenis, чтобы скролл оставался плавным */
   document.addEventListener('click', function (e) {
     var link = e.target.closest && e.target.closest('a[href^="#"]');

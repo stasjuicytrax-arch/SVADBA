@@ -232,6 +232,104 @@
     queueTimecode();
   });
 
+  /* ------------------------------------ 09: фото меняется по пунктам списка */
+  var whyItems = document.querySelectorAll('.why__item');
+  var whyPhotos = document.querySelectorAll('.why__photo');
+
+  if (whyItems.length && whyPhotos.length && 'IntersectionObserver' in window) {
+    var whyObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var i = entry.target.getAttribute('data-why');
+        whyPhotos.forEach(function (photo) {
+          photo.classList.toggle('is-on', photo.getAttribute('data-why-photo') === i);
+        });
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+
+    whyItems.forEach(function (item) { whyObserver.observe(item); });
+  }
+
+  /* --------------------------------- 10: колонки отзывов едут навстречу */
+  function reviewColumn(col, dir) {
+    var originals = Array.prototype.slice.call(col.children);
+    if (!originals.length) return;
+
+    var gap = parseFloat(getComputedStyle(col).rowGap) || 0;
+    var unit = 0;
+    var y = dir < 0 ? 0 : -1;
+    var paused = false;
+    var rafId = null;
+    var lastT = 0;
+
+    function measure() {
+      col.querySelectorAll('[data-clone]').forEach(function (n) { n.remove(); });
+
+      unit = originals.reduce(function (sum, node) {
+        return sum + node.getBoundingClientRect().height + gap;
+      }, 0);
+
+      /* Считаем по своей высоте: scrollHeight у колонки врёт — грид растягивает
+         её под самую высокую соседку, и второй колонке клоны не доставались */
+      var need = unit + col.parentElement.clientHeight;
+      var have = unit;
+      var guard = 0;
+      while (have < need && guard < 8) {
+        originals.forEach(function (node) {
+          var clone = node.cloneNode(true);
+          clone.setAttribute('data-clone', '');
+          clone.setAttribute('aria-hidden', 'true');
+          col.appendChild(clone);
+        });
+        have += unit;
+        guard++;
+      }
+      if (y === -1) y = -unit;
+    }
+
+    measure();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+
+    function tick(t) {
+      rafId = null;
+      if (paused) { lastT = 0; return; }
+
+      var k = lastT ? Math.min((t - lastT) / 16.667, 3) : 1;
+      lastT = t;
+      y += dir * 0.35 * k;
+      if (unit > 0) {
+        while (y <= -unit) y += unit;
+        while (y > 0) y -= unit;
+      }
+      col.style.transform = 'translate3d(0,' + y + 'px,0)';
+      rafId = requestAnimationFrame(tick);
+    }
+
+    function start() { if (rafId === null && !paused) rafId = requestAnimationFrame(tick); }
+
+    var cols = col.parentElement;
+    cols.addEventListener('pointerenter', function () { paused = true; });
+    cols.addEventListener('pointerleave', function () { paused = false; start(); });
+    cols.addEventListener('focusin', function () { paused = true; });
+    cols.addEventListener('focusout', function () { paused = false; start(); });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        paused = !entries[0].isIntersecting;
+        start();
+      }, { rootMargin: '200px 0px' }).observe(cols);
+    }
+
+    start();
+  }
+
+  /* Едут только на десктопе: на телефоне колонки превращаются в свайп-слайдер */
+  if (!reduced && window.matchMedia('(min-width: 900px)').matches) {
+    document.querySelectorAll('.reviews__col').forEach(function (col) {
+      reviewColumn(col, parseFloat(col.getAttribute('data-reviews-dir')) || -1);
+    });
+  }
+
   /* ------------------------------------------------ Появление блока 04 */
   if (!reduced && hasGsap) {
     gsap.from('.wordmark__eyebrow', {
@@ -291,6 +389,34 @@
     gsap.from('.fan__card--left', { x: 0, rotation: 0, ease: 'none', scrollTrigger: fanScroll });
     gsap.from('.fan__card--right', { x: 0, rotation: 0, ease: 'none', scrollTrigger: fanScroll });
     gsap.from('.fan__card--center', { y: 0, ease: 'none', scrollTrigger: fanScroll });
+
+    /* 11: раскадровка едет горизонтально, пока секция закреплена */
+    var pin = document.querySelector('.stages__pin');
+    var track = document.querySelector('.stages__track');
+    var viewport = document.querySelector('.stages__viewport');
+    var fill = document.querySelector('.stages__progress-fill');
+
+    if (pin && track && viewport && window.matchMedia('(min-width: 900px)').matches) {
+      var distance = function () {
+        return Math.max(track.scrollWidth - viewport.clientWidth, 0);
+      };
+
+      gsap.to(track, {
+        x: function () { return -distance(); },
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.stages',
+          start: 'top top',
+          end: function () { return '+=' + (distance() + window.innerHeight * 0.4); },
+          pin: pin,
+          scrub: true,
+          invalidateOnRefresh: true,
+          onUpdate: function (self) {
+            if (fill) fill.style.transform = 'scaleX(' + self.progress + ')';
+          }
+        }
+      });
+    }
 
     /* Лёгкий параллакс занавеса */
     gsap.to('.hero__bg', {

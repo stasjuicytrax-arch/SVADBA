@@ -1337,16 +1337,23 @@
 
 .lightbox[hidden] { display: none; }
 
+/* flex, а не grid: в сетке строка растягивалась под натуральную высоту фото,
+   max-height упирался сам в себя, и кадр вылезал за экран — у портретных срезало головы */
 .lightbox__stage {
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-height: 0;
+  overflow: hidden;
   padding: 24px;
   touch-action: pan-y;
   user-select: none;
 }
 
+/* Кадр целиком, в своих пропорциях, по центру */
 .lightbox__photo {
+  width: auto;
+  height: auto;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -1464,11 +1471,681 @@
 }
 
 /* --------------------------------------------------------------------------
-   Блоки 09–14 — каркас
+   09. Почему истории настоящие — липкое фото справа, пункты слева
    -------------------------------------------------------------------------- */
-.section--why .section__title span { display: block; }
+.why {
+  padding-block: clamp(80px, 10vw, 130px);
+}
 
-.section--reviews { background: var(--wine); }
+.why__title {
+  margin: 0 0 clamp(40px, 5vw, 72px);
+  font-size: clamp(1.9rem, 5.6vw, 5rem);
+  line-height: .95;
+  letter-spacing: -0.045em;
+  color: var(--maroon);
+}
+
+.why__title-line { display: block; }
+
+.why__title-mute {
+  color: var(--rose-ink);
+  padding-left: 2.2em;
+}
+
+.why__inner {
+  display: grid;
+  gap: clamp(32px, 4vw, 64px);
+}
+
+.why__list {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.why__item {
+  display: grid;
+  gap: 10px;
+  padding-bottom: clamp(28px, 4vw, 56px);
+  border-bottom: 1px solid rgba(62, 2, 4, .18);
+}
+
+.why__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.why__num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: var(--red-brand);
+}
+
+.why__name {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.2vw, 2rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--maroon);
+}
+
+.why__text {
+  margin: 0;
+  max-width: 44ch;
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+.why__inline {
+  margin: 10px 0 0;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-photo);
+  overflow: hidden;
+}
+
+.why__inline img,
+.why__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.why__media { display: none; }
+
+/* --------------------------------------------------------------------------
+   10. Отзывы — две колонки едут навстречу (реф. 2)
+   -------------------------------------------------------------------------- */
+.reviews {
+  padding-block: clamp(80px, 10vw, 140px);
+  background: radial-gradient(60% 50% at 78% 38%, rgba(202, 38, 21, .18), transparent 70%), var(--night);
+  color: var(--paper);
+  overflow: hidden;
+}
+
+.reviews__inner {
+  display: grid;
+  gap: clamp(32px, 4vw, 64px);
+}
+
+.reviews__kicker {
+  margin: 0 0 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--rose-soft);
+}
+
+.reviews__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 7vw, 6.5rem);
+  line-height: .9;
+  letter-spacing: -0.05em;
+}
+
+.reviews__cols {
+  display: grid;
+  gap: 16px;
+}
+
+/* Карточка-«кадр»: те же срезанные углы, что у больших панелей, но мельче */
+.review {
+  --cut: 16px;
+  padding: clamp(20px, 2vw, 28px);
+  background: var(--wine);
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+.review__text {
+  margin: 0 0 18px;
+  font-size: .9375rem;
+  line-height: 1.55;
+  color: var(--paper);
+}
+
+.review__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--rose-soft);
+}
+
+/* Тёмный текст на ярком градиенте: --paper на нём дал бы 4.1:1 при кегле 12px */
+.review__ini {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, var(--red), var(--ember));
+  color: var(--night);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+/* --------------------------------------------------------------------------
+   11. Этапы работы — раскадровка: горизонтальный ход в закреплённой секции
+   -------------------------------------------------------------------------- */
+.stages {
+  padding-block: clamp(72px, 9vw, 120px);
+  overflow: hidden;
+}
+
+.stages__head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 40px);
+  margin-bottom: clamp(28px, 3vw, 48px);
+}
+
+.stages__title {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw, 5.5rem);
+  line-height: .92;
+  letter-spacing: -0.05em;
+  color: var(--maroon);
+}
+
+/* Полоса прогресса — шкала плёнки */
+.stages__progress {
+  position: relative;
+  flex: 1;
+  max-width: 420px;
+  height: 10px;
+  margin-bottom: .6em;
+  background-image: repeating-linear-gradient(90deg, rgba(62, 2, 4, .3) 0 1px, transparent 1px 100%);
+  background-size: 14px 6px;
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  border-bottom: 1px solid rgba(62, 2, 4, .28);
+}
+
+.stages__progress-fill {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.stages__viewport { overflow: hidden; }
+
+.stages__track {
+  display: flex;
+  gap: clamp(16px, 2vw, 28px);
+  margin: 0;
+  padding: 0 var(--gutter);
+  list-style: none;
+  width: max-content;
+}
+
+.scene {
+  flex: 0 0 clamp(230px, 25vw, 340px);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.scene__tag {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  color: var(--rose-ink);
+}
+
+.scene__photo {
+  margin: 0;
+  aspect-ratio: 1;
+  border-radius: var(--radius-photo);
+  overflow: hidden;
+  filter: grayscale(1) contrast(1.04);
+}
+
+/* Последний кадр — цветной: фильм проявился */
+.scene--final .scene__photo { filter: none; }
+
+.scene__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scene__name {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.55rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--maroon);
+}
+
+.scene__text {
+  margin: 0;
+  font-size: .95rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   12. Стоимость — две афиши
+   -------------------------------------------------------------------------- */
+.price {
+  padding-block: clamp(80px, 10vw, 140px);
+}
+
+.price__title {
+  margin: 0 0 clamp(32px, 4vw, 56px);
+  font-size: clamp(2.4rem, 7vw, 6.5rem);
+  line-height: .9;
+  letter-spacing: -0.05em;
+  color: var(--paper);
+}
+
+.price__cards {
+  display: grid;
+  gap: 16px;
+}
+
+.plan {
+  position: relative;
+  display: flex;
+  min-height: clamp(360px, 40vw, 540px);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.plan__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plan--full {
+  background: var(--night);
+  color: var(--paper);
+}
+
+.plan--full::before,
+.plan--full::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.plan--full::before {
+  background: var(--glow-hero);
+  opacity: .6;
+}
+
+/* Затемнение снизу: на узком экране карточка ниже, и подпись попадала
+   на светлую часть занавеса — тянем шторку выше */
+.plan--full::after {
+  background: linear-gradient(180deg, rgba(11, 3, 2, .15) 0%, rgba(11, 3, 2, .74) 46%, rgba(11, 3, 2, .93) 100%);
+}
+
+.plan--day {
+  background: var(--screen);
+  color: var(--ink);
+}
+
+.plan__body {
+  display: grid;
+  align-content: end;
+  gap: 14px;
+  width: 100%;
+  padding: clamp(24px, 3vw, 44px);
+}
+
+.plan__name {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.6rem);
+  line-height: .95;
+  letter-spacing: -0.04em;
+}
+
+.plan__desc {
+  margin: 0;
+  max-width: 34ch;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.plan--full .plan__desc { color: var(--rose-soft); }
+.plan--day .plan__desc { color: var(--rose-ink); }
+
+.plan__price {
+  margin: 6px 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 5.6vw, 4.6rem);
+  line-height: .9;
+  letter-spacing: -0.05em;
+}
+
+.plan--day .plan__price { color: var(--maroon); }
+
+/* Цена на тёмной афише — в стеклянной плашке поверх фото (DESIGN.md §5) */
+.plan__price--glass {
+  justify-self: start;
+  padding: 10px 22px;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, rgba(255, 255, 255, .18), rgba(255, 255, 255, .05)), rgba(27, 1, 0, .38);
+  backdrop-filter: blur(18px) saturate(170%);
+  -webkit-backdrop-filter: blur(18px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, .28);
+}
+
+.plan .cta { justify-self: start; }
+
+/* На светлой афише кнопка тёмная: --paper на --maroon даёт 14.9:1 */
+.cta--ink { background: var(--maroon); }
+.cta--ink::before { background: var(--ink); }
+
+.price__more {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  margin-top: clamp(20px, 2.5vw, 32px);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--rose-soft);
+}
+
+.price__more span { border-bottom: 1px solid currentColor; }
+
+.price__more:hover,
+.price__more:focus-visible { color: var(--paper); }
+
+.price__more .cta__arrow {
+  width: 12px;
+  height: 12px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.price__more .cta__arrow svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.price__more .cta__arrow svg:last-child { transform: translate(-100%, 100%); }
+
+/* --------------------------------------------------------------------------
+   13. Вопросы — липкий заголовок слева, аккордеон справа
+   -------------------------------------------------------------------------- */
+.faq {
+  padding-block: clamp(80px, 10vw, 130px);
+}
+
+.faq__inner {
+  display: grid;
+  gap: clamp(32px, 4vw, 72px);
+}
+
+.faq__title {
+  margin: 0;
+  font-size: clamp(2.4rem, 6vw, 5.5rem);
+  line-height: .9;
+  letter-spacing: -0.05em;
+  color: var(--maroon);
+}
+
+.faq__lead {
+  margin: 14px 0 28px;
+  font-size: clamp(1.05rem, 1.4vw, 1.35rem);
+  color: var(--rose-ink);
+}
+
+.faq__item { border-top: 1px solid rgba(62, 2, 4, .18); }
+.faq__item:last-child { border-bottom: 1px solid rgba(62, 2, 4, .18); }
+
+.faq__head { margin: 0; }
+
+.faq__q {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+  width: 100%;
+  padding: clamp(18px, 2vw, 26px) 0;
+  text-align: left;
+  color: var(--maroon);
+}
+
+.faq__num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: .16em;
+  color: var(--rose-ink);
+}
+
+.faq__label {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.05rem, 1.7vw, 1.55rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+/* «+» поворачивается в «×» */
+.faq__sign {
+  position: relative;
+  width: 20px;
+  height: 20px;
+}
+
+.faq__sign::before,
+.faq__sign::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  background: var(--maroon);
+  transition: transform 320ms var(--ease-default);
+}
+
+.faq__sign::after { transform: rotate(90deg); }
+
+.faq__q[aria-expanded="true"] .faq__sign::before { transform: rotate(45deg); }
+.faq__q[aria-expanded="true"] .faq__sign::after { transform: rotate(135deg); }
+
+/* Высоту ответа ведёт GSAP (0 → auto): CSS-переход grid-template-rows на этой
+   странице застревал на стартовом значении. visibility прячет свёрнутый ответ
+   и от скринридера, и от клавиатуры */
+.faq__answer {
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+/* Класс снимается не по клику, а когда схлопывание доиграло,
+   иначе текст пропадал мгновенно, а коробка ещё ехала */
+.faq__answer.is-shown {
+  visibility: visible;
+}
+
+.faq__answer-inner {
+  display: grid;
+  gap: 12px;
+  max-width: 64ch;
+  padding: 0 0 24px clamp(34px, 4vw, 62px);
+}
+
+.faq__answer-inner p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   Адаптив блоков 09–13
+   -------------------------------------------------------------------------- */
+@media (max-width: 899px) {
+  /* Отзывы — горизонтальный свайп-слайдер */
+  .reviews__cols {
+    display: flex;
+    gap: 12px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding: 0 var(--gutter) 8px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .reviews__col { display: contents; }
+
+  .review {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  /* Этапы — вертикальный таймлайн */
+  .stages__viewport { overflow: visible; }
+
+  .stages__track {
+    flex-direction: column;
+    gap: 32px;
+    width: auto;
+    padding: 0 0 0 28px;
+    border-left: 1px solid rgba(62, 2, 4, .2);
+  }
+
+  .scene {
+    position: relative;
+    flex: none;
+  }
+
+  .scene::before {
+    content: "";
+    position: absolute;
+    left: -33px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+
+  .stages__progress { display: none; }
+
+  .stages__head { display: block; }
+}
+
+@media (min-width: 900px) {
+  .why__inner { grid-template-columns: minmax(0, 1fr) minmax(0, 520px); }
+
+  .why__inline { display: none; }
+
+  /* Липкое фото: меняется, когда до пункта доходит прокрутка */
+  .why__media {
+    display: block;
+    position: sticky;
+    top: 120px;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-photo);
+    overflow: hidden;
+  }
+
+  .why__photo {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    clip-path: inset(14% 0 0 0);
+    transition: opacity 600ms var(--ease-default), clip-path 800ms var(--ease-default);
+  }
+
+  .why__photo.is-on {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .why__item { min-height: 26vh; }
+
+  .reviews__inner {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+    align-items: start;
+  }
+
+  .reviews__head {
+    position: sticky;
+    top: 140px;
+  }
+
+  .reviews__cols {
+    grid-template-columns: 1fr 1fr;
+    height: min(72vh, 660px);
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 12%, #000 88%, transparent 100%);
+  }
+
+  .reviews__col {
+    display: grid;
+    gap: 16px;
+    align-content: start;
+    will-change: transform;
+  }
+
+  .price__cards { grid-template-columns: 1.15fr .85fr; }
+
+  .faq__inner {
+    grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr);
+    align-items: start;
+  }
+
+  .faq__aside {
+    position: sticky;
+    top: 130px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Блок 14 — каркас
+   -------------------------------------------------------------------------- */
+
 
 .section--photo-strip { overflow: hidden; }
 
