@@ -3,6 +3,10 @@ dist
 .DS_Store
 *.local
 
+# системный мусор Windows
+Thumbs.db
+desktop.ini
+
 # служебный кэш impeccable (локальное состояние сессии)
 .impeccable/hook.cache.json
 
@@ -18,3 +22,6 @@ server/data/
 15-DSC01195.jpg
 newfon.jpg
 10-DSC01249.jpg
+
+# чужие сайты-референсы — только для работы, не публикуем
+Referens/
