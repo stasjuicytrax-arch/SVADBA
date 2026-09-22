@@ -2668,7 +2668,8 @@ body.is-intro { overflow: hidden; }
 .mfield__input:not(:placeholder-shown) ~ .mfield__label,
 .mfield--filled .mfield__label {
   transform: translateY(-26px) scale(.74);
-  letter-spacing: .08em;
+  /* Подпись строчными: широкий трекинг тут мешает чтению, оставляем едва заметный */
+  letter-spacing: .02em;
   color: var(--maroon);
 }
 
