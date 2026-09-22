@@ -378,12 +378,6 @@
       scrollTrigger: { trigger: '.chrono', start: 'top 95%', end: 'top 20%', scrub: true }
     });
 
-    /* Хлопушка «хлопает» один раз при появлении */
-    gsap.fromTo('.film__clapper', { rotation: -16 }, {
-      rotation: 0, duration: .24, delay: .25, ease: 'power4.in',
-      scrollTrigger: { trigger: '.film__text', start: 'top 85%', once: true }
-    });
-
     /* 06: веер раскрывается от скролла — из стопки в стороны */
     var fanScroll = { trigger: '.fan', start: 'top 85%', end: 'center 50%', scrub: true };
     gsap.from('.fan__card--left', { x: 0, rotation: 0, ease: 'none', scrollTrigger: fanScroll });

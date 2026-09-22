@@ -768,12 +768,6 @@
   color: var(--ink);
 }
 
-.film__clapper {
-  width: 72px;
-  height: auto;
-  transform-origin: 20% 90%;
-}
-
 /* --------------------------------------------------------------------------
    06. «Мы не ходим в кадре» — тёмная секция, веер фото, mono стат-строка
    -------------------------------------------------------------------------- */
@@ -2350,9 +2344,12 @@
   .nav__menu,
   .nav__side { display: none; }
 
-  .nav__burger { display: grid; }
+  /* margin-left: auto держит бургер у правого края пилюли — раньше эту
+     роль играла кнопка «Написать нам», теперь на мобиле она скрыта:
+     дубль есть в самом .curtain меню */
+  .nav__burger { display: grid; margin-left: auto; }
 
-  .nav__cta { margin-left: auto; }
+  .nav__cta { display: none; }
 
   .nav__pill {
     width: 100%;
@@ -2365,7 +2362,7 @@
   .hero__cards {
     right: 32px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
   }
 
   .hero__scroll { display: none; }
@@ -2380,6 +2377,12 @@
   }
 
   .wordmark__eyebrow i { display: none; }
+
+  /* Десктопные отступы (clamp до 140px/96px) на узком экране растягивали
+     блок в высоту — между заголовком, фото, цифрой и текстом было слишком
+     много воздуха */
+  .film { padding-block: clamp(56px, 9vw, 100px); }
+  .film__body { margin-top: clamp(32px, 5vw, 56px); gap: clamp(24px, 3vw, 40px); }
 
   .film__line--mute { padding-left: .6em; }
   .film__line--shift { padding-left: 1.2em; }
