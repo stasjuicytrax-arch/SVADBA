@@ -286,7 +286,7 @@
 /* На узком экране от кадра остаётся центральная треть, а пара стоит левее
    середины — сдвигаем окно кадрирования к ней */
 @media (max-width: 899px) {
-  .hero__bg { object-position: 42% 50%; }
+  .hero__bg { object-position: 52% 50%; }
 
   /* В узкий кадр попадают светлые пятна (платье, блик люстры) ровно под
      логотипом и подписью — затемняем центр сильнее */
@@ -2462,4 +2462,370 @@ body.is-intro { overflow: hidden; }
   .ticket__stub::before { display: none; }
   .chrono__fill { transform: none; }
   .credits__list[aria-hidden="true"] { display: none; }
+}
+
+/* --------------------------------------------------------------------------
+   Попап-форма «Написать нам» (docs/TZ.md, раздел «Попапы»)
+   -------------------------------------------------------------------------- */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 170;
+  display: grid;
+  place-items: center;
+  padding: clamp(10px, 2.5vw, 40px);
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 3, 2, .74);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  backdrop-filter: blur(16px) saturate(120%);
+  opacity: 0;
+  transition: opacity 420ms var(--ease-default);
+}
+
+.modal__window {
+  --cut: clamp(18px, 2vw, 28px);
+  position: relative;
+  display: grid;
+  width: min(1020px, 100%);
+  max-height: min(92svh, 880px);
+  background: var(--screen);
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(16px) scale(.965);
+  transition: opacity 360ms var(--ease-default), transform 480ms cubic-bezier(.16, .84, .26, 1);
+}
+
+.modal.is-open .modal__backdrop { opacity: 1; }
+
+.modal.is-open .modal__window {
+  opacity: 1;
+  transform: none;
+}
+
+.modal__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(240, 238, 236, .82);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: var(--maroon);
+  transition: background 220ms var(--ease-default), transform 220ms var(--ease-default);
+}
+
+.modal__close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+}
+
+.modal__close:hover,
+.modal__close:focus-visible {
+  background: var(--red);
+  color: var(--paper);
+  transform: rotate(90deg);
+}
+
+/* Картина из ТЗ — слева в попапе */
+.modal__art {
+  position: relative;
+  margin: 0;
+  overflow: hidden;
+}
+
+.modal__art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal__art-tag {
+  position: absolute;
+  left: 18px;
+  bottom: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--paper);
+  text-shadow: 0 1px 12px rgba(11, 3, 2, .9);
+}
+
+.modal__panel {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: clamp(24px, 3vw, 44px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(62, 2, 4, .28) transparent;
+}
+
+.modal__panel::-webkit-scrollbar { width: 6px; }
+.modal__panel::-webkit-scrollbar-track { background: transparent; }
+
+.modal__panel::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(62, 2, 4, .28);
+}
+
+.modal__window:focus { outline: none; }
+
+.modal__eyebrow {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  color: var(--red-brand);
+}
+
+.modal__title {
+  margin: 10px 0 0;
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem);
+  line-height: .95;
+  letter-spacing: -0.04em;
+  color: var(--maroon);
+}
+
+.modal__lead {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  color: var(--rose-ink);
+}
+
+.mform {
+  display: grid;
+  gap: 20px;
+  margin-top: clamp(20px, 2.6vw, 30px);
+}
+
+/* Ловушка для ботов: не видна человеку, но остаётся в DOM */
+.mform__trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.mfield {
+  position: relative;
+  padding-top: 20px;
+}
+
+.mfield__input {
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid var(--line-light);
+  border-radius: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 1.05rem;
+  color: var(--ink);
+  color-scheme: light;
+  transition: border-color 260ms var(--ease-default);
+}
+
+.mfield__input--area {
+  min-height: 60px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.mfield__input:focus { outline: none; }
+
+/* Плавающая подпись: поднимается при фокусе и когда в поле что-то есть */
+.mfield__label {
+  position: absolute;
+  left: 0;
+  top: 28px;
+  font-size: 1.05rem;
+  color: var(--rose-ink);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform 280ms cubic-bezier(.16, .84, .26, 1), color 280ms var(--ease-default);
+}
+
+.mfield__input:focus ~ .mfield__label,
+.mfield__input:not(:placeholder-shown) ~ .mfield__label,
+.mfield--filled .mfield__label {
+  transform: translateY(-26px) scale(.74);
+  letter-spacing: .08em;
+  color: var(--maroon);
+}
+
+.mfield__input:focus ~ .mfield__label { color: var(--red-brand); }
+
+.mfield__opt {
+  font-size: .78em;
+  color: var(--rose-ink);
+}
+
+/* Подчёркивание, которое подсвечивается при фокусе */
+.mfield__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 340ms cubic-bezier(.16, .84, .26, 1);
+}
+
+.mfield__input:focus ~ .mfield__line { transform: scaleX(1); }
+
+.mfield__error {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--red-brand);
+}
+
+/* Поле с ошибкой: линия остаётся видимой */
+.mfield__input[aria-invalid="true"] ~ .mfield__line {
+  transform: scaleX(1);
+  background: var(--red-brand);
+}
+
+.mform__submit { justify-self: start; }
+
+.mform__submit:disabled {
+  background: rgba(62, 2, 4, .12);
+  color: var(--rose-ink);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mform__submit:disabled::before { transform: scaleY(0); }
+
+.mform__fail {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--red-brand);
+}
+
+.mform__fail a {
+  color: var(--maroon);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ------------------------------------------------ Состояние «отправлено» */
+.mdone {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: 10px;
+  min-height: 300px;
+  padding: clamp(24px, 3vw, 44px);
+}
+
+.mdone__mark {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 8px;
+  fill: none;
+  stroke: var(--red-brand);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mdone__ring {
+  stroke-dasharray: 176;
+  stroke-dashoffset: 176;
+  animation: mdone-ring 700ms cubic-bezier(.16, .84, .26, 1) forwards;
+}
+
+.mdone__check {
+  stroke-dasharray: 52;
+  stroke-dashoffset: 52;
+  animation: mdone-check 420ms cubic-bezier(.16, .84, .26, 1) 440ms forwards;
+}
+
+@keyframes mdone-ring { to { stroke-dashoffset: 0; } }
+@keyframes mdone-check { to { stroke-dashoffset: 0; } }
+
+.mdone__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: .95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: var(--maroon);
+}
+
+.mdone__text {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--rose-ink);
+}
+
+.mdone__close { margin-top: 16px; }
+
+/* «Оставьте заявку» над «Заявка отправлена» читалось противоречиво */
+.modal.is-sent .modal__eyebrow,
+.modal.is-sent .modal__title,
+.modal.is-sent .modal__lead { display: none; }
+
+.modal.is-sent .modal__panel { align-content: center; }
+
+@media (min-width: 900px) {
+  .modal__window { grid-template-columns: minmax(0, 38%) minmax(0, 1fr); }
+}
+
+@media (max-width: 899px) {
+  .modal__window { grid-template-rows: 124px minmax(0, 1fr); }
+
+  .modal__art img { object-position: center 38%; }
+
+  .modal__close {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+/* Без анимаций: окно появляется сразу, галочка уже нарисована */
+@media (prefers-reduced-motion: reduce) {
+  .modal__backdrop,
+  .modal__window { transition: none; }
+
+  .mfield__label,
+  .mfield__line,
+  .modal__close { transition: none; }
+
+  .mdone__ring,
+  .mdone__check {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+.ticket__fail {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--red-brand);
 }
