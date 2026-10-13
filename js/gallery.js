@@ -253,6 +253,26 @@
         "12-koryakov_0103.jpg",
         "13-koryakov_0006.jpg"
       ]
+    },
+    {
+      "id": "lesyavitya",
+      "tag": "КАДР 011",
+      "names": "Леся и Витя",
+      "dir": "11-lesya-vitya",
+      "files": [
+        "01-IMG_4439.jpg",
+        "02-IMG_4440.jpg",
+        "03-IMG_4443.jpg",
+        "04-IMG_4446.jpg",
+        "05-IMG_4448.jpg",
+        "06-IMG_4454.jpg",
+        "07-IMG_4457.jpg",
+        "08-IMG_4459.jpg",
+        "09-IMG_4460.jpg",
+        "10-IMG_4461.jpg",
+        "11-IMG_4462.jpg",
+        "12-IMG_4463.jpg"
+      ]
     }
   ];
 
