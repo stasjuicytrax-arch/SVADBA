@@ -18,7 +18,6 @@
         "06-DSC00413.jpg",
         "07-DSC01157.jpg",
         "08-DSC00124_resized.jpg",
-        "09-DSC04775.jpg",
         "10-DSC01249.jpg",
         "11-DSC01724.jpg",
         "12-DSC02040.jpg",
@@ -41,7 +40,6 @@
       "files": [
         "01-DSC04230.jpg",
         "02-DSC05033.jpg",
-        "03-DSC01054.jpg",
         "04-DSC05015.jpg",
         "05-DSC04855.jpg",
         "06-DSC05068.jpg",
@@ -54,8 +52,7 @@
         "13-DSC04775.jpg",
         "14-DSC05037.jpg",
         "15-DSC05074.jpg",
-        "16-DSC04370.jpg",
-        "17-DSC00373.jpg"
+        "16-DSC04370.jpg"
       ]
     },
     {
@@ -73,7 +70,6 @@
         "07-DSC05528.jpg",
         "08-DSC07382.jpg",
         "09-DSC08629.jpg",
-        "10-DSC05510.jpg",
         "11-DSC08649.jpg",
         "12-DSC08875.jpg",
         "13-DSC05297.jpg",
@@ -91,7 +87,6 @@
       "files": [
         "01-DSC09547.jpg",
         "02-DSC09591.jpg",
-        "03-DSC06847.jpg",
         "04-DSC11913.jpg",
         "05-DSC12393.jpg",
         "06-DSC09550.jpg",
