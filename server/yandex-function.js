@@ -1,5 +1,5 @@
 /* Точка входа для Yandex Cloud Functions (российский serverless).
-   В настройках функции: точка входа `yandex-function.handler`, среда Node.js 18+.
+   Функция vtitrah-leads: точка входа `yandex-function.handler`, среда Node.js 22.
    Заявки складываются в /tmp, поэтому для облака задайте LEADS_FILE=/tmp/leads.jsonl
    и не считайте файл надёжным хранилищем — включите логирование или базу. */
 
@@ -7,17 +7,30 @@
 
 var handler = require('./lead-handler');
 
+var ORIGINS = ['https://help-wedding.ru', 'https://www.help-wedding.ru', 'https://stasjuicytrax-arch.github.io'];
+
 module.exports.handler = function (event) {
   var method = (event && (event.httpMethod || (event.requestContext && event.requestContext.http && event.requestContext.http.method))) || 'POST';
+  var h = (event && event.headers) || {};
+  var origin = h.Origin || h.origin || '';
   var headers = {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': process.env.ALLOWED_ORIGIN || '*',
+    'Access-Control-Allow-Origin': ORIGINS.indexOf(origin) !== -1 ? origin : ORIGINS[0],
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    Vary: 'Origin'
   };
 
   if (method === 'OPTIONS') {
     return Promise.resolve({ statusCode: 204, headers: headers, body: '' });
+  }
+
+  if (method !== 'POST') {
+    return Promise.resolve({ statusCode: 405, headers: headers, body: JSON.stringify({ ok: false, error: 'Метод не поддерживается' }) });
+  }
+  /* Запросы из чужих браузерных страниц не принимаем (без Origin — допускается для проверки из консоли) */
+  if (origin && ORIGINS.indexOf(origin) === -1) {
+    return Promise.resolve({ statusCode: 403, headers: headers, body: JSON.stringify({ ok: false, error: 'Запрещено' }) });
   }
 
   var raw = event && event.body ? event.body : '{}';

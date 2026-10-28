@@ -12,8 +12,22 @@
      Заявка уходит на обработчик на российском хостинге (docs/LEGAL.md §2.3),
      а он уже сохраняет её и шлёт уведомление в Телеграм. Токен бота живёт
      только на сервере — в этом файле его нет и быть не должно. */
+  /* UTM-метки запоминаем при входе: человек может отправить заявку не сразу */
+  var UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+  try {
+    var params = new URLSearchParams(location.search);
+    var found = {};
+    UTM_KEYS.forEach(function (key) { if (params.get(key)) found[key] = params.get(key).slice(0, 150); });
+    if (Object.keys(found).length) sessionStorage.setItem('vt-utm', JSON.stringify(found));
+  } catch (e) { /* без sessionStorage — без меток */ }
+
   function sendLead(data) {
     if (!ENDPOINT) return Promise.reject(new Error('endpoint-not-set'));
+
+    try {
+      var utm = JSON.parse(sessionStorage.getItem('vt-utm') || '{}');
+      UTM_KEYS.forEach(function (key) { if (utm[key]) data[key] = utm[key]; });
+    } catch (e) { /* без меток */ }
 
     var controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
     var timer = controller ? setTimeout(function () { controller.abort(); }, 12000) : null;
@@ -368,6 +382,14 @@
       if (!tConsent.checked && !firstBad) firstBad = tConsent;
       if (firstBad) {
         firstBad.focus();
+        return;
+      }
+
+      /* Ловушка для ботов: спрятанное поле заполняют только они */
+      var tTrap = ticket.elements.site;
+      if (tTrap && tTrap.value) {
+        ticket.hidden = true;
+        tDone.hidden = false;
         return;
       }
 

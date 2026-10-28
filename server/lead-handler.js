@@ -4,7 +4,11 @@
    Порядок действий важен юридически (docs/LEGAL.md §2.3):
    1) заявка сохраняется здесь, на сервере в России;
    2) только потом уходит уведомление в Телеграм.
-   Токен бота берётся из переменных окружения и на клиент не попадает. */
+   Токен бота берётся из переменных окружения и на клиент не попадает.
+
+   В Яндекс.Облаке (функция vtitrah-leads) api.telegram.org недоступен, поэтому
+   уведомление идёт через релей stevent-relay на Cloudflare — как на st-event.com:
+   TELEGRAM_API_BASE=https://stevent-relay.ngperm.workers.dev + заголовок X-Relay-Key. */
 
 'use strict';
 
@@ -15,6 +19,8 @@ var https = require('https');
 var LEADS_FILE = process.env.LEADS_FILE || path.join(__dirname, 'data', 'leads.jsonl');
 var BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 var CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
+var API_BASE = process.env.TELEGRAM_API_BASE || 'https://api.telegram.org';
+var RELAY_KEY = process.env.TELEGRAM_RELAY_KEY || '';
 
 /* Не больше пяти заявок с одного адреса за десять минут */
 var RATE_LIMIT = Number(process.env.RATE_LIMIT || 5);
@@ -44,7 +50,7 @@ function clean(value, max) {
 
 function validate(body) {
   /* Ловушка для ботов: поле спрятано на странице, человек его не заполняет */
-  if (clean(body.company, 50)) return { error: 'spam' };
+  if (clean(body.company, 50) || clean(body.site, 50)) return { error: 'spam' };
 
   var name = clean(body.name, 80);
   var phone = clean(body.phone, 30);
@@ -64,7 +70,10 @@ function validate(body) {
       page: clean(body.page, 300),
       sent_at: clean(body.sent_at, 40),
       consent: true,
-      consent_version: clean(body.consent_version, 40)
+      consent_version: clean(body.consent_version, 40),
+      utm: ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']
+        .map(function (k) { return [k.replace('utm_', ''), clean(body[k], 120)]; })
+        .filter(function (pair) { return pair[1]; })
     }
   };
 }
@@ -75,25 +84,31 @@ function save(lead) {
   fs.appendFileSync(LEADS_FILE, JSON.stringify(lead) + '\n', 'utf8');
 }
 
+function esc(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
 function telegramText(lead) {
+  var time = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' });
   var rows = [
-    '<b>Новая заявка с сайта</b>',
+    '#vtitrah 🔔 <b>Новая заявка — В титрах</b>',
     '',
-    'Форма: ' + lead.form,
-    'Имя: ' + lead.name,
-    'Телефон: ' + lead.phone
+    '<b>Форма:</b> ' + esc(lead.form),
+    '<b>Имя:</b> ' + esc(lead.name),
+    '<b>Телефон:</b> ' + esc(lead.phone)
   ];
 
-  if (lead.date) rows.push('Дата: ' + lead.date);
-  if (lead.note) rows.push('Комментарий: ' + lead.note);
+  if (lead.date) rows.push('<b>Дата:</b> ' + esc(lead.date.split('-').reverse().join('.')));
+  if (lead.note) rows.push('<b>Комментарий:</b> ' + esc(lead.note));
 
   rows.push('');
-  rows.push('Страница: ' + lead.page);
-  rows.push('Время: ' + lead.sent_at);
-  rows.push('Согласие: ' + lead.consent_version);
+  rows.push('<b>Страница:</b> ' + esc(lead.page || '—') + ' | <b>Время:</b> ' + esc(time) + ' (МСК)');
+  if (lead.utm && lead.utm.length) {
+    rows.push('<b>UTM:</b> ' + esc(lead.utm.map(function (p) { return p[0] + ': ' + p[1]; }).join(' / ')));
+  }
+  rows.push('<b>Согласие:</b> ' + esc(lead.consent_version || '—'));
 
-  return rows.join('\n').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/&lt;b&gt;/g, '<b>').replace(/&lt;\/b&gt;/g, '</b>');
+  return rows.join('\n');
 }
 
 function notifyTelegram(lead) {
@@ -110,15 +125,27 @@ function notifyTelegram(lead) {
       disable_web_page_preview: true
     });
 
+    var base;
+    try { base = new URL(API_BASE); } catch (e) { resolve({ sent: false, reason: 'Неверный TELEGRAM_API_BASE' }); return; }
+
+    var headers = { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) };
+    if (RELAY_KEY) headers['X-Relay-Key'] = RELAY_KEY;
+
     var req = https.request({
-      hostname: 'api.telegram.org',
-      path: '/bot' + BOT_TOKEN + '/sendMessage',
+      hostname: base.hostname,
+      port: base.port || 443,
+      path: base.pathname.replace(/\/$/, '') + '/bot' + BOT_TOKEN + '/sendMessage',
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(payload) },
+      headers: headers,
       timeout: 8000
     }, function (res) {
-      res.resume();
-      resolve({ sent: res.statusCode === 200, reason: 'HTTP ' + res.statusCode });
+      var raw = '';
+      res.on('data', function (c) { raw += c; });
+      res.on('end', function () {
+        var j = {};
+        try { j = JSON.parse(raw); } catch (e) { /* не JSON */ }
+        resolve({ sent: res.statusCode === 200 && j.ok !== false, reason: 'HTTP ' + res.statusCode + (j.description ? ': ' + j.description : '') });
+      });
     });
 
     req.on('timeout', function () { req.destroy(); });
@@ -150,6 +177,9 @@ function handleLead(body, meta) {
   lead.received_at = new Date().toISOString();
   lead.ip = ip;
   lead.user_agent = clean(meta && meta.userAgent, 300);
+
+  /* В облаке /tmp живёт недолго — копия заявки остаётся в журнале функции (Yandex Cloud Logging, РФ) */
+  console.log('Заявка: ' + JSON.stringify(lead));
 
   try {
     save(lead);
